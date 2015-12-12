@@ -1,0 +1,26 @@
+HKCR
+{
+	QS.Application.1 = s 'QSApplication Class'
+	{
+		CLSID = s '{1CF388F9-847C-4F7D-B481-8E0166792D16}'
+	}
+	QS.Application = s 'QSApplication Class'
+	{
+		CLSID = s '{1CF388F9-847C-4F7D-B481-8E0166792D16}'
+		CurVer = s 'QS.Application.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {1CF388F9-847C-4F7D-B481-8E0166792D16} = s 'QSApplication Class'
+		{
+			ProgID = s 'QS.Application.1'
+			VersionIndependentProgID = s 'QS.Application'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Free'
+			}
+			'TypeLib' = s '{9ED7F133-BEC0-4B73-A542-D7D86208A4C3}'
+		}
+	}
+}

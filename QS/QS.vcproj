@@ -2,10 +2,10 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="QuickScript"
-	ProjectGUID="{B13F8FA6-9E58-41DD-B9C4-DA2BA6CF4F99}"
-	RootNamespace="QuickScript"
-	Keyword="MFCProj"
+	Name="QS"
+	ProjectGUID="{1AC9B61A-52D1-4BBC-A570-21B9B31360CA}"
+	RootNamespace="QS"
+	Keyword="AtlProj"
 	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
@@ -23,9 +23,9 @@
 			Name="Debug|Pocket PC 2003 (ARMV4)"
 			OutputDirectory="$(SolutionDir)\Output\$(ConfigurationName)\$(PlatformName)\"
 			IntermediateDirectory="$(SolutionDir)\Output\Intermediate\$(ConfigurationName)\$(PlatformName)\$(ProjectName)\"
-			ConfigurationType="1"
-			UseOfMFC="2"
+			ConfigurationType="2"
 			UseOfATL="2"
+			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
 			>
 			<Tool
@@ -44,14 +44,20 @@
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="_DEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES)"
 				MkTypLibCompatible="false"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(IntDir)/QS.tlb"
+				HeaderFileName="QS.h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="QS_i.c"
+				ProxyFileName="QS_p.c"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				ExecutionBucket="7"
 				Optimization="0"
-				PreprocessorDefinitions="_DEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;DEBUG;$(ARCHFAM);$(_ARCHFAM_);POCKETPC2003_UI_MODEL"
+				PreprocessorDefinitions="_DEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;DEBUG;_USRDLL;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE;POCKETPC2003_UI_MODEL"
 				MinimalRebuild="true"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
 				DebugInformationFormat="3"
@@ -70,14 +76,19 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				RegisterOutput="false"
+				IgnoreImportLibrary="true"
 				AdditionalOptions=" /subsystem:windowsce,4.20 /machine:ARM /ARMPADCODE"
+				OutputFile="$(OutDir)/QS.dll"
 				LinkIncremental="2"
+				ModuleDefinitionFile=".\QS.def"
 				GenerateDebugInformation="true"
+				SubSystem="0"
 				StackReserveSize="65536"
 				StackCommitSize="4096"
-				EntryPointSymbol="WinMainCRTStartup"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
+				ImportLibrary="$(OutDir)/QS.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -100,8 +111,8 @@
 			<DeploymentTool
 				ForceDirty="-1"
 				RemoteDirectory=""
-				RegisterOutput="0"
-				AdditionalFiles="msvcr90.dll|$(BINDIR)\$(INSTRUCTIONSET)\|%CSIDL_PROGRAM_FILES%\$(ProjectName)|0;atl90.dll|$(BINDIR)\$(INSTRUCTIONSET)\|%CSIDL_PROGRAM_FILES%\$(ProjectName)|0;msvcr90d.dll|$(BINDIR)\$(INSTRUCTIONSET)\|%CSIDL_PROGRAM_FILES%\$(ProjectName)|0;MFC90UD.dll|$(BINDIR)\$(INSTRUCTIONSET)\|%CSIDL_PROGRAM_FILES%\$(ProjectName)|0;"
+				RegisterOutput="-1"
+				AdditionalFiles=""
 			/>
 			<DebuggerTool
 			/>
@@ -110,9 +121,9 @@
 			Name="Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
 			OutputDirectory="$(SolutionDir)\Output\$(ConfigurationName)\$(PlatformName)\"
 			IntermediateDirectory="$(SolutionDir)\Output\Intermediate\$(ConfigurationName)\$(PlatformName)\$(ProjectName)\"
-			ConfigurationType="1"
-			UseOfMFC="2"
+			ConfigurationType="2"
 			UseOfATL="2"
+			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
 			>
 			<Tool
@@ -131,14 +142,20 @@
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="_DEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES)"
 				MkTypLibCompatible="false"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(IntDir)/QS.tlb"
+				HeaderFileName="QS.h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="QS_i.c"
+				ProxyFileName="QS_p.c"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				ExecutionBucket="7"
 				Optimization="0"
-				PreprocessorDefinitions="_DEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;DEBUG;$(ARCHFAM);$(_ARCHFAM_);POCKETPC2003_UI_MODEL"
+				PreprocessorDefinitions="_DEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;DEBUG;_USRDLL;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE;POCKETPC2003_UI_MODEL"
 				MinimalRebuild="true"
-				RuntimeLibrary="3"
+				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
 				DebugInformationFormat="3"
@@ -157,14 +174,19 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				RegisterOutput="false"
+				IgnoreImportLibrary="true"
 				AdditionalOptions=" /subsystem:windowsce,5.01"
+				OutputFile="$(OutDir)/QS.dll"
 				LinkIncremental="2"
+				ModuleDefinitionFile=".\QS.def"
 				GenerateDebugInformation="true"
+				SubSystem="0"
 				StackReserveSize="65536"
 				StackCommitSize="4096"
-				EntryPointSymbol="WinMainCRTStartup"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
+				ImportLibrary="$(OutDir)/QS.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -187,8 +209,8 @@
 			<DeploymentTool
 				ForceDirty="-1"
 				RemoteDirectory=""
-				RegisterOutput="0"
-				AdditionalFiles="msvcr90.dll|$(BINDIR)\$(INSTRUCTIONSET)\|%CSIDL_PROGRAM_FILES%\$(ProjectName)|0;atl90.dll|$(BINDIR)\$(INSTRUCTIONSET)\|%CSIDL_PROGRAM_FILES%\$(ProjectName)|0;msvcr90d.dll|$(BINDIR)\$(INSTRUCTIONSET)\|%CSIDL_PROGRAM_FILES%\$(ProjectName)|0;MFC90UD.dll|$(BINDIR)\$(INSTRUCTIONSET)\|%CSIDL_PROGRAM_FILES%\$(ProjectName)|0;"
+				RegisterOutput="-1"
+				AdditionalFiles=""
 			/>
 			<DebuggerTool
 			/>
@@ -197,9 +219,9 @@
 			Name="Release|Pocket PC 2003 (ARMV4)"
 			OutputDirectory="$(SolutionDir)\Output\$(ConfigurationName)\$(PlatformName)\"
 			IntermediateDirectory="$(SolutionDir)\Output\Intermediate\$(ConfigurationName)\$(PlatformName)\$(ProjectName)\"
-			ConfigurationType="1"
-			UseOfMFC="2"
+			ConfigurationType="2"
 			UseOfATL="2"
+			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
 			>
 			<Tool
@@ -218,15 +240,20 @@
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES)"
 				MkTypLibCompatible="false"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(IntDir)/QS.tlb"
+				HeaderFileName="QS.h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="QS_i.c"
+				ProxyFileName="QS_p.c"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				ExecutionBucket="7"
 				Optimization="2"
 				FavorSizeOrSpeed="2"
-				PreprocessorDefinitions="NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;$(ARCHFAM);$(_ARCHFAM_);POCKETPC2003_UI_MODEL"
-				MinimalRebuild="false"
-				RuntimeLibrary="2"
+				PreprocessorDefinitions="NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;_USRDLL;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE;POCKETPC2003_UI_MODEL"
+				RuntimeLibrary="0"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
 				DebugInformationFormat="3"
@@ -245,16 +272,21 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				RegisterOutput="false"
+				IgnoreImportLibrary="true"
 				AdditionalOptions=" /subsystem:windowsce,4.20 /machine:ARM /ARMPADCODE"
+				OutputFile="$(OutDir)/QS.dll"
 				LinkIncremental="1"
+				ModuleDefinitionFile=".\QS.def"
 				GenerateDebugInformation="false"
+				SubSystem="0"
 				StackReserveSize="65536"
 				StackCommitSize="4096"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				EntryPointSymbol="WinMainCRTStartup"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
+				ImportLibrary="$(OutDir)/QS.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -277,8 +309,8 @@
 			<DeploymentTool
 				ForceDirty="-1"
 				RemoteDirectory=""
-				RegisterOutput="0"
-				AdditionalFiles="msvcr90.dll|$(BINDIR)\$(INSTRUCTIONSET)\|%CSIDL_PROGRAM_FILES%\$(ProjectName)|0;atl90.dll|$(BINDIR)\$(INSTRUCTIONSET)\|%CSIDL_PROGRAM_FILES%\$(ProjectName)|0;MFC90U.dll|$(BINDIR)\$(INSTRUCTIONSET)\|%CSIDL_PROGRAM_FILES%\$(ProjectName)|0;"
+				RegisterOutput="-1"
+				AdditionalFiles=""
 			/>
 			<DebuggerTool
 			/>
@@ -287,9 +319,9 @@
 			Name="Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
 			OutputDirectory="$(SolutionDir)\Output\$(ConfigurationName)\$(PlatformName)\"
 			IntermediateDirectory="$(SolutionDir)\Output\Intermediate\$(ConfigurationName)\$(PlatformName)\$(ProjectName)\"
-			ConfigurationType="1"
-			UseOfMFC="2"
+			ConfigurationType="2"
 			UseOfATL="2"
+			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
 			>
 			<Tool
@@ -308,15 +340,20 @@
 				Name="VCMIDLTool"
 				PreprocessorDefinitions="NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES)"
 				MkTypLibCompatible="false"
+				GenerateStublessProxies="true"
+				TypeLibraryName="$(IntDir)/QS.tlb"
+				HeaderFileName="QS.h"
+				DLLDataFileName=""
+				InterfaceIdentifierFileName="QS_i.c"
+				ProxyFileName="QS_p.c"
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
 				ExecutionBucket="7"
 				Optimization="2"
 				FavorSizeOrSpeed="2"
-				PreprocessorDefinitions="NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;$(ARCHFAM);$(_ARCHFAM_);POCKETPC2003_UI_MODEL"
-				MinimalRebuild="false"
-				RuntimeLibrary="2"
+				PreprocessorDefinitions="NDEBUG;_WIN32_WCE=$(CEVER);UNDER_CE;$(PLATFORMDEFINES);WINCE;_USRDLL;$(ARCHFAM);$(_ARCHFAM_);_UNICODE;UNICODE;POCKETPC2003_UI_MODEL"
+				RuntimeLibrary="0"
 				UsePrecompiledHeader="2"
 				WarningLevel="3"
 				DebugInformationFormat="3"
@@ -335,16 +372,21 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				RegisterOutput="false"
+				IgnoreImportLibrary="true"
 				AdditionalOptions=" /subsystem:windowsce,5.01"
+				OutputFile="$(OutDir)/QS.dll"
 				LinkIncremental="1"
+				ModuleDefinitionFile=".\QS.def"
 				GenerateDebugInformation="false"
+				SubSystem="0"
 				StackReserveSize="65536"
 				StackCommitSize="4096"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				EntryPointSymbol="WinMainCRTStartup"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
+				ImportLibrary="$(OutDir)/QS.lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -367,8 +409,8 @@
 			<DeploymentTool
 				ForceDirty="-1"
 				RemoteDirectory=""
-				RegisterOutput="0"
-				AdditionalFiles="msvcr90.dll|$(BINDIR)\$(INSTRUCTIONSET)\|%CSIDL_PROGRAM_FILES%\$(ProjectName)|0;atl90.dll|$(BINDIR)\$(INSTRUCTIONSET)\|%CSIDL_PROGRAM_FILES%\$(ProjectName)|0;MFC90U.dll|$(BINDIR)\$(INSTRUCTIONSET)\|%CSIDL_PROGRAM_FILES%\$(ProjectName)|0;"
+				RegisterOutput="-1"
+				AdditionalFiles=""
 			/>
 			<DebuggerTool
 			/>
@@ -383,11 +425,19 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\QuickScript.cpp"
+				RelativePath=".\QS.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\QuickScriptDlg.cpp"
+				RelativePath=".\QS.def"
+				>
+			</File>
+			<File
+				RelativePath=".\QS.idl"
+				>
+			</File>
+			<File
+				RelativePath=".\QSApplication.cpp"
 				>
 			</File>
 			<File
@@ -433,15 +483,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\QuickScript.h"
+				RelativePath=".\QSApplication.h"
 				>
 			</File>
 			<File
-				RelativePath=".\QuickScriptDlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\Resourceppc.h"
+				RelativePath=".\resourceppc.h"
 				>
 			</File>
 			<File
@@ -455,16 +501,93 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath=".\res\QuickScript.ico"
+				RelativePath=".\QS.rc2"
 				>
 			</File>
 			<File
-				RelativePath=".\QuickScriptppc.rc"
+				RelativePath=".\QS.rgs"
 				>
 			</File>
 			<File
-				RelativePath=".\res\QuickScriptppc.rc2"
+				RelativePath=".\QSApplication.rgs"
 				>
+			</File>
+			<File
+				RelativePath=".\QSppc.rc"
+				>
+				<FileConfiguration
+					Name="Debug|Pocket PC 2003 (ARMV4)"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Pocket PC 2003 (ARMV4)"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+					/>
+				</FileConfiguration>
+			</File>
+		</Filter>
+		<Filter
+			Name="Generated Files"
+			SourceControlFiles="false"
+			>
+			<File
+				RelativePath=".\QS.h"
+				>
+			</File>
+			<File
+				RelativePath=".\QS_i.c"
+				>
+				<FileConfiguration
+					Name="Debug|Pocket PC 2003 (ARMV4)"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Pocket PC 2003 (ARMV4)"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="0"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<File

@@ -1,0 +1,41 @@
+// QS.idl : IDL source for QS
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (QS.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	uuid(9ED7F133-BEC0-4B73-A542-D7D86208A4C3),
+	version(1.0),
+	helpstring("QS 1.0 Type Library")
+]
+library QSLib
+{
+	importlib("stdole2.tlb");
+
+	//interface IDocHostUIHandlerDispatch;
+	//interface IAxWinAmbientDispatchEx;
+
+	[
+		object,
+		uuid(2C6DA222-0C4C-411A-B2EC-9486359239FE),
+		dual,
+		nonextensible,
+		helpstring("IQSApplication Interface"),
+		pointer_default(unique)
+	]
+	interface IQSApplication : IDispatch{
+	};
+
+	[
+		uuid(1CF388F9-847C-4F7D-B481-8E0166792D16),
+		helpstring("QSApplication Class")
+	]
+	coclass QSApplication
+	{
+		[default] interface IQSApplication;
+	};
+};
