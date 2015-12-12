@@ -4,6 +4,8 @@
 #include "stdafx.h"
 #include "QuickScript.h"
 #include "QuickScriptDlg.h"
+#include "..\QS\QS_i.h"
+#include "..\QS\QS_i.c"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -27,6 +29,7 @@ BEGIN_MESSAGE_MAP(CQuickScriptDlg, CDialog)
 	ON_WM_SIZE()
 #endif
 	//}}AFX_MSG_MAP
+	ON_BN_CLICKED(BTN_RUN, &CQuickScriptDlg::OnBnClickedRun)
 END_MESSAGE_MAP()
 
 
@@ -61,3 +64,15 @@ void CQuickScriptDlg::OnSize(UINT /*nType*/, int /*cx*/, int /*cy*/)
 }
 #endif
 
+
+void CQuickScriptDlg::OnBnClickedRun()
+{
+	HRESULT hr = S_OK;
+
+	CComPtr<IQSScriptSite> spScriptSite;
+	hr = spScriptSite.CoCreateInstance(CLSID_QSScriptSite);
+	hr = spScriptSite->put_ScriptEngine(CComBSTR(L"VBScript"));
+	spScriptSite = NULL;
+
+	// TODO: Add your control notification handler code here
+}

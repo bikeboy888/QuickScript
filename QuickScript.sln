@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QuickScript", "QuickScript\QuickScript.vcproj", "{B13F8FA6-9E58-41DD-B9C4-DA2BA6CF4F99}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1AC9B61A-52D1-4BBC-A570-21B9B31360CA} = {1AC9B61A-52D1-4BBC-A570-21B9B31360CA}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "QS", "QS\QS.vcproj", "{1AC9B61A-52D1-4BBC-A570-21B9B31360CA}"
 EndProject

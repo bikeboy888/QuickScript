@@ -49,12 +49,15 @@ BOOL CQuickScriptApp::InitInstance()
 
 	CQuickScriptDlg dlg;
 	m_pMainWnd = &dlg;
+
+	CoInitializeEx(NULL, COINIT_MULTITHREADED);
 	INT_PTR nResponse = dlg.DoModal();
 	if (nResponse == IDOK)
 	{
 		// TODO: Place code here to handle when the dialog is
 		//  dismissed with OK
 	}
+	CoUninitialize();
 
 	// Since the dialog has been closed, return FALSE so that we exit the
 	//  application, rather than start the application's message pump.

@@ -1,22 +1,17 @@
 // QS.idl : IDL source for QS
 //
 
+enum
+{
+	PROPID_ScriptEngine
+};
+
 // This file will be processed by the MIDL tool to
 // produce the type library (QS.tlb) and marshalling code.
 
 import "oaidl.idl";
 import "ocidl.idl";
 
-[
-	object,
-	uuid(90B698CC-B837-41DF-928D-2440612AC247),
-	dual,
-	nonextensible,
-	helpstring("IQSScriptSite Interface"),
-	pointer_default(unique)
-]
-interface IQSScriptSite : IDispatch{
-};
 [
 	uuid(9ED7F133-BEC0-4B73-A542-D7D86208A4C3),
 	version(1.0),
@@ -38,6 +33,18 @@ library QSLib
 		pointer_default(unique)
 	]
 	interface IQSApplication : IDispatch{
+	};
+
+	[
+		object,
+		uuid(90B698CC-B837-41DF-928D-2440612AC247),
+		dual,
+		nonextensible,
+		helpstring("IQSScriptSite Interface"),
+		pointer_default(unique)
+	]
+	interface IQSScriptSite : IDispatch{
+		[id(PROPID_ScriptEngine), propput] HRESULT ScriptEngine(BSTR ScriptEngine);
 	};
 
 	[
