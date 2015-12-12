@@ -1,19 +1,14 @@
 HKCR
 {
-	QS.Application.1 = s 'QSApplication Class'
-	{
-		CLSID = s '{1CF388F9-847C-4F7D-B481-8E0166792D16}'
-	}
 	QS.Application = s 'QSApplication Class'
 	{
 		CLSID = s '{1CF388F9-847C-4F7D-B481-8E0166792D16}'
-		CurVer = s 'QS.Application.1'
 	}
 	NoRemove CLSID
 	{
 		ForceRemove {1CF388F9-847C-4F7D-B481-8E0166792D16} = s 'QSApplication Class'
 		{
-			ProgID = s 'QS.Application.1'
+			ProgID = s 'QS.Application'
 			VersionIndependentProgID = s 'QS.Application'
 			ForceRemove 'Programmable'
 			InprocServer32 = s '%MODULE%'

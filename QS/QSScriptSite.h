@@ -1,4 +1,4 @@
-// QSApplication.h : Declaration of the CQSApplication
+// QSScriptSite.h : Declaration of the CQSScriptSite
 
 #pragma once
 #ifdef STANDARDSHELL_UI_MODEL
@@ -23,26 +23,26 @@
 
 
 
-// CQSApplication
+// CQSScriptSite
 
-class ATL_NO_VTABLE CQSApplication :
+class ATL_NO_VTABLE CQSScriptSite :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CQSApplication, &CLSID_QSApplication>,
+	public CComCoClass<CQSScriptSite, &CLSID_QSScriptSite>,
 	public ISupportErrorInfo,
-	public IDispatchImpl<IQSApplication, &IID_IQSApplication, &LIBID_QSLib, /*wMajor =*/ 1, /*wMinor =*/ 0>
+	public IDispatchImpl<IQSScriptSite, &IID_IQSScriptSite, &LIBID_QSLib, /*wMajor =*/ 1, /*wMinor =*/ 0>
 {
 public:
-	CQSApplication()
+	CQSScriptSite()
 	{
 	}
 
 #ifndef _CE_DCOM
-DECLARE_REGISTRY_RESOURCEID(IDR_QSAPPLICATION)
+DECLARE_REGISTRY_RESOURCEID(IDR_QSSCRIPTSITE)
 #endif
 
 
-BEGIN_COM_MAP(CQSApplication)
-	COM_INTERFACE_ENTRY(IQSApplication)
+BEGIN_COM_MAP(CQSScriptSite)
+	COM_INTERFACE_ENTRY(IQSScriptSite)
 	COM_INTERFACE_ENTRY(IDispatch)
 	COM_INTERFACE_ENTRY(ISupportErrorInfo)
 END_COM_MAP()
@@ -66,4 +66,4 @@ public:
 
 };
 
-OBJECT_ENTRY_AUTO(__uuidof(QSApplication), CQSApplication)
+OBJECT_ENTRY_AUTO(__uuidof(QSScriptSite), CQSScriptSite)

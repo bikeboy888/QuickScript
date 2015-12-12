@@ -435,9 +435,45 @@
 			<File
 				RelativePath=".\QS.idl"
 				>
+				<FileConfiguration
+					Name="Debug|Pocket PC 2003 (ARMV4)"
+					>
+					<Tool
+						Name="VCMIDLTool"
+						HeaderFileName="QS_i.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
+					>
+					<Tool
+						Name="VCMIDLTool"
+						HeaderFileName="QS_i.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Pocket PC 2003 (ARMV4)"
+					>
+					<Tool
+						Name="VCMIDLTool"
+						HeaderFileName="QS_i.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)"
+					>
+					<Tool
+						Name="VCMIDLTool"
+						HeaderFileName="QS_i.h"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\QSApplication.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\QSScriptSite.cpp"
 				>
 			</File>
 			<File
@@ -484,6 +520,10 @@
 			>
 			<File
 				RelativePath=".\QSApplication.h"
+				>
+			</File>
+			<File
+				RelativePath=".\QSScriptSite.h"
 				>
 			</File>
 			<File
@@ -544,15 +584,15 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\QSScriptSite.rgs"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Generated Files"
 			SourceControlFiles="false"
 			>
-			<File
-				RelativePath=".\QS.h"
-				>
-			</File>
 			<File
 				RelativePath=".\QS_i.c"
 				>
@@ -588,6 +628,10 @@
 						UsePrecompiledHeader="0"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\QS_i.h"
+				>
 			</File>
 		</Filter>
 		<File

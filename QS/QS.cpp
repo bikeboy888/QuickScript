@@ -7,7 +7,7 @@
 #include "resourceppc.h"
 #endif 
 
-#include "QS.h"
+#include "QS_i.h"
 
 
 class CQSModule : public CAtlDllModuleT< CQSModule >

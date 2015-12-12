@@ -8,6 +8,16 @@ import "oaidl.idl";
 import "ocidl.idl";
 
 [
+	object,
+	uuid(90B698CC-B837-41DF-928D-2440612AC247),
+	dual,
+	nonextensible,
+	helpstring("IQSScriptSite Interface"),
+	pointer_default(unique)
+]
+interface IQSScriptSite : IDispatch{
+};
+[
 	uuid(9ED7F133-BEC0-4B73-A542-D7D86208A4C3),
 	version(1.0),
 	helpstring("QS 1.0 Type Library")
@@ -37,5 +47,13 @@ library QSLib
 	coclass QSApplication
 	{
 		[default] interface IQSApplication;
+	};
+	[
+		uuid(E3B84835-0590-4F24-8BC5-4CBA6FCF4605),
+		helpstring("QSScriptSite Class")
+	]
+	coclass QSScriptSite
+	{
+		[default] interface IQSScriptSite;
 	};
 };

@@ -1,0 +1,7 @@
+Output
+*.ncb
+*.suo
+*.user
+*_i.c
+*_i.h
+*_p.c
