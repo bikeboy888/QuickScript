@@ -67,3 +67,4 @@ using namespace ATL;
 #endif
 
 #include <altcecrt.h>
+#include <activscp.h>

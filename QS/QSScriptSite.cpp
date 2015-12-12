@@ -20,3 +20,9 @@ STDMETHODIMP CQSScriptSite::InterfaceSupportsErrorInfo(REFIID riid)
 	}
 	return S_FALSE;
 }
+
+STDMETHODIMP CQSScriptSite::put_ScriptEngine(BSTR bstrScriptEngine)
+{
+	return S_OK;
+}
+

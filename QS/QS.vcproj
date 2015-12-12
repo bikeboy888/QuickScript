@@ -477,6 +477,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ScriptSite.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -528,6 +532,10 @@
 			</File>
 			<File
 				RelativePath=".\resourceppc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\ScriptSite.h"
 				>
 			</File>
 			<File
