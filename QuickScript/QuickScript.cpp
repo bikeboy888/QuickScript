@@ -48,7 +48,7 @@ BOOL CQuickScriptApp::InitInstance()
 	// such as the name of your company or organization
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
 
-	RegSvr(L"QS.dll");
+	//RegSvr(L"QS.dll");
 
 	CQuickScriptDlg dlg;
 	m_pMainWnd = &dlg;

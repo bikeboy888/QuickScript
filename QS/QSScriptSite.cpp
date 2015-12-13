@@ -3,8 +3,11 @@
 #include "stdafx.h"
 #include "QSScriptSite.h"
 
-
 // CQSScriptSite
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
 
 STDMETHODIMP CQSScriptSite::InterfaceSupportsErrorInfo(REFIID riid)
 {
@@ -21,35 +24,62 @@ STDMETHODIMP CQSScriptSite::InterfaceSupportsErrorInfo(REFIID riid)
 	return S_FALSE;
 }
 
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
 STDMETHODIMP CQSScriptSite::put_ScriptEngine(BSTR bstrScriptEngine)
 {
 	HRESULT hr = S_OK;
 
-    CScriptSite* pScriptSite = new CScriptSite();
+	if (m_spIActiveScript || m_spIActiveScriptParse || m_pScriptSite)
+	{
+		CHECKHR(Close());
+	}
 
-    CComPtr<IActiveScript> spVBScript;
-    CComPtr<IActiveScriptParse> spVBScriptParse;
-    hr = spVBScript.CoCreateInstance(bstrScriptEngine);
-    hr = spVBScript->SetScriptSite(pScriptSite);
-    hr = spVBScript->QueryInterface(IID_IActiveScriptParse, (void**) &spVBScriptParse);
-    hr = spVBScriptParse->InitNew();
+    m_pScriptSite = new CScriptSite();
+    CHECKHR(m_spIActiveScript.CoCreateInstance(bstrScriptEngine));
+    CHECKHR(m_spIActiveScript->SetScriptSite(m_pScriptSite));
+    CHECKHR(m_spIActiveScript->QueryInterface(IID_IActiveScriptParse, (void**) &m_spIActiveScriptParse));
+    CHECKHR(m_spIActiveScriptParse->InitNew());
+	return S_OK;
+}
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
 
-    // Run some scripts
-    CComVariant result;
-    EXCEPINFO ei = { };
-    hr = spVBScriptParse->ParseScriptText(OLESTR("1 + 2 + 3 + 4"), NULL, NULL, NULL, 0, 0, SCRIPTTEXT_ISEXPRESSION, &result, &ei);
-	CComVariant resultBSTR;
-	hr = resultBSTR.ChangeType(VT_BSTR, &result);
-	TCHAR szDebug[1024] = { };
-	_stprintf(szDebug, _T("Result: %s\r\n"), (BSTR) V_BSTR(&resultBSTR));
-	OutputDebugString(szDebug);
-
-    // Cleanup
-    spVBScriptParse = NULL;
-    spVBScript = NULL;
-    pScriptSite->Release();
-    pScriptSite = NULL;
-
+STDMETHODIMP CQSScriptSite::Close()
+{
+	m_spIActiveScript = NULL;
+	m_spIActiveScriptParse = NULL;
+	if (m_pScriptSite)
+	{
+		m_pScriptSite->Release();
+		m_pScriptSite = NULL;
+	}
+	CoFreeUnusedLibrariesEx(0, 0);
+	CoFreeUnusedLibrariesEx(0, 0);
 	return S_OK;
 }
 
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSScriptSite::Evaluate(BSTR bstrScript, VARIANT* pvarResult)
+{
+	HRESULT hr = S_OK;
+	if (!pvarResult) return E_INVALIDARG;
+	VariantInit(pvarResult);
+	if (!m_spIActiveScriptParse) return E_POINTER;
+    CComVariant result;
+    EXCEPINFO ei = { };
+    hr = m_spIActiveScriptParse->ParseScriptText(bstrScript, NULL, NULL, NULL, 0, 0, SCRIPTTEXT_ISEXPRESSION, &result, &ei);
+	if (FAILED(hr)) return S_FALSE;
+	CHECKHR(result.Detach(pvarResult));
+	return hr;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------

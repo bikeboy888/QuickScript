@@ -30,6 +30,7 @@ Global
 		{B13F8FA6-9E58-41DD-B9C4-DA2BA6CF4F99}.Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Deploy.0 = Release|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
 		{1AC9B61A-52D1-4BBC-A570-21B9B31360CA}.Debug|Pocket PC 2003 (ARMV4).ActiveCfg = Debug|Pocket PC 2003 (ARMV4)
 		{1AC9B61A-52D1-4BBC-A570-21B9B31360CA}.Debug|Pocket PC 2003 (ARMV4).Build.0 = Debug|Pocket PC 2003 (ARMV4)
+		{1AC9B61A-52D1-4BBC-A570-21B9B31360CA}.Debug|Pocket PC 2003 (ARMV4).Deploy.0 = Debug|Pocket PC 2003 (ARMV4)
 		{1AC9B61A-52D1-4BBC-A570-21B9B31360CA}.Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).ActiveCfg = Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
 		{1AC9B61A-52D1-4BBC-A570-21B9B31360CA}.Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Build.0 = Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)
 		{1AC9B61A-52D1-4BBC-A570-21B9B31360CA}.Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I).Deploy.0 = Debug|Windows Mobile 5.0 Pocket PC SDK (ARMV4I)

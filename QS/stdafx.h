@@ -68,3 +68,12 @@ using namespace ATL;
 
 #include <altcecrt.h>
 #include <activscp.h>
+
+#ifndef CHECKHR
+#define CHECKHR(stmt) \
+	hr = (stmt); \
+	if (FAILED(hr)) \
+	{ \
+		return hr; \
+	}
+#endif

@@ -3,7 +3,10 @@
 
 enum
 {
-	PROPID_ScriptEngine
+	PROPID_ScriptEngine,
+
+	METHID_Close,
+	METHID_Evaluate
 };
 
 // This file will be processed by the MIDL tool to
@@ -45,6 +48,8 @@ library QSLib
 	]
 	interface IQSScriptSite : IDispatch{
 		[id(PROPID_ScriptEngine), propput] HRESULT ScriptEngine(BSTR ScriptEngine);
+		[id(METHID_Close)] HRESULT Close();
+		[id(METHID_Evaluate)] HRESULT Evaluate(BSTR Scipt, VARIANT* Result);
 	};
 
 	[

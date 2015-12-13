@@ -110,9 +110,9 @@
 			/>
 			<DeploymentTool
 				ForceDirty="-1"
-				RemoteDirectory=""
-				RegisterOutput="-1"
-				AdditionalFiles="msvcr90.dll|$(BINDIR)\$(INSTRUCTIONSET)\|%CSIDL_PROGRAM_FILES%\$(ProjectName)|0;atl90.dll|$(BINDIR)\$(INSTRUCTIONSET)\|%CSIDL_PROGRAM_FILES%\$(ProjectName)|0;msvcr90d.dll|$(BINDIR)\$(INSTRUCTIONSET)\|%CSIDL_PROGRAM_FILES%\$(ProjectName)|0;MFC90UD.dll|$(BINDIR)\$(INSTRUCTIONSET)\|%CSIDL_PROGRAM_FILES%\$(ProjectName)|0;"
+				RemoteDirectory="%CSIDL_PROGRAM_FILES%\$(SolutionName)"
+				RegisterOutput="0"
+				AdditionalFiles=""
 			/>
 			<DebuggerTool
 			/>
@@ -208,8 +208,8 @@
 			/>
 			<DeploymentTool
 				ForceDirty="-1"
-				RemoteDirectory=""
-				RegisterOutput="-1"
+				RemoteDirectory="%CSIDL_PROGRAM_FILES%\$(SolutionName)"
+				RegisterOutput="0"
 				AdditionalFiles=""
 			/>
 			<DebuggerTool
@@ -308,7 +308,7 @@
 			/>
 			<DeploymentTool
 				ForceDirty="-1"
-				RemoteDirectory=""
+				RemoteDirectory="%CSIDL_PROGRAM_FILES%\$(SolutionName)"
 				RegisterOutput="-1"
 				AdditionalFiles=""
 			/>
@@ -408,7 +408,7 @@
 			/>
 			<DeploymentTool
 				ForceDirty="-1"
-				RemoteDirectory=""
+				RemoteDirectory="%CSIDL_PROGRAM_FILES%\$(SolutionName)"
 				RegisterOutput="-1"
 				AdditionalFiles=""
 			/>
@@ -469,14 +469,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\QSApplication.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\QSScriptSite.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\ScriptSite.cpp"
 				>
 			</File>
@@ -522,14 +514,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath=".\QSApplication.h"
-				>
-			</File>
-			<File
-				RelativePath=".\QSScriptSite.h"
-				>
-			</File>
 			<File
 				RelativePath=".\resourceppc.h"
 				>
@@ -611,6 +595,26 @@
 			</File>
 			<File
 				RelativePath=".\QS_i.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Objects"
+			>
+			<File
+				RelativePath=".\QSApplication.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\QSApplication.h"
+				>
+			</File>
+			<File
+				RelativePath=".\QSScriptSite.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\QSScriptSite.h"
 				>
 			</File>
 		</Filter>

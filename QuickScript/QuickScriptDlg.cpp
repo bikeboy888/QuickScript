@@ -69,10 +69,20 @@ void CQuickScriptDlg::OnBnClickedRun()
 {
 	HRESULT hr = S_OK;
 
+	CComVariant varResult;
 	CComPtr<IQSScriptSite> spScriptSite;
 	hr = spScriptSite.CoCreateInstance(CLSID_QSScriptSite);
 	hr = spScriptSite->put_ScriptEngine(CComBSTR(L"VBScript"));
+	hr = spScriptSite->Evaluate(CComBSTR(L"1 * 2 * 3 * 4 * 5"), &varResult);
+	hr = spScriptSite->Close();
 	spScriptSite = NULL;
 
-	// TODO: Add your control notification handler code here
+	CComVariant varResultBSTR;
+	varResultBSTR.ChangeType(VT_BSTR, &varResult);
+	TCHAR szText[1024] = { };
+	_stprintf(szText, _T("Result: %s\r\n"), V_BSTR(&varResultBSTR));
+	CoFreeUnusedLibrariesEx(0, 0);
+	CoFreeUnusedLibrariesEx(0, 0);
+	OutputDebugString(szText);
+	MessageBox(szText, _T("Output"), MB_OK);
 }

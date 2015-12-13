@@ -60,18 +60,21 @@ END_COM_MAP()
 
 	void FinalRelease()
 	{
-		if (m_pScriptSite)
+		if (m_spIActiveScript || m_spIActiveScriptParse || m_pScriptSite)
 		{
-			m_pScriptSite->Release();
-			m_pScriptSite = NULL;
+			Close();
 		}
 	}
 
 public:
-	CScriptSite*	m_pScriptSite;
+	CScriptSite* m_pScriptSite;
+	CComPtr<IActiveScript> m_spIActiveScript;
+	CComPtr<IActiveScriptParse> m_spIActiveScriptParse;
 
 public:
 	STDMETHOD(put_ScriptEngine)(BSTR bstrScriptEngine);
+	STDMETHOD(Close)();
+	STDMETHOD(Evaluate)(BSTR bstrScript, VARIANT* pvarResult);
 
 };
 
