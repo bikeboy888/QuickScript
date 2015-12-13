@@ -9,7 +9,6 @@
 
 #include "QS_i.h"
 
-
 class CQSModule : public CAtlDllModuleT< CQSModule >
 {
 public :
