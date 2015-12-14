@@ -4,7 +4,6 @@
 #include "stdafx.h"
 #include "QuickScript.h"
 #include "QuickScriptDlg.h"
-#include "..\QS\QS_i.h"
 #include "..\QS\QS_i.c"
 
 #ifdef _DEBUG
@@ -30,6 +29,7 @@ BEGIN_MESSAGE_MAP(CQuickScriptDlg, CDialog)
 #endif
 	//}}AFX_MSG_MAP
 	ON_BN_CLICKED(BTN_RUN, &CQuickScriptDlg::OnBnClickedRun)
+	ON_BN_CLICKED(BTN_CLEANUP, &CQuickScriptDlg::OnBnClickedCleanup)
 END_MESSAGE_MAP()
 
 
@@ -69,20 +69,39 @@ void CQuickScriptDlg::OnBnClickedRun()
 {
 	HRESULT hr = S_OK;
 
+	if (!m_spIQSScriptSite)
+	{
+		hr = m_spIQSScriptSite.CoCreateInstance(CLSID_QSScriptSite);
+		hr = m_spIQSScriptSite->put_ScriptEngine(CComBSTR(L"VBScript"));
+	}
+
+	VARIANT varContext = { };
 	CComVariant varResult;
-	CComPtr<IQSScriptSite> spScriptSite;
-	hr = spScriptSite.CoCreateInstance(CLSID_QSScriptSite);
-	hr = spScriptSite->put_ScriptEngine(CComBSTR(L"VBScript"));
-	hr = spScriptSite->Evaluate(CComBSTR(L"1 * 2 * 3 * 4 * 5"), &varResult);
-	hr = spScriptSite->Close();
-	spScriptSite = NULL;
+	CComBSTR bstrID(L"Script1234");
+	hr = m_spIQSScriptSite->ImportScript(CComBSTR(L"function f(x) { return x*x + 1; }"), CComBSTR(L"JScript"), CComVariant(bstrID));
+	//hr = m_spIQSScriptSite->ImportScript(CComBSTR(L"Function f(x)\r\n  f = x*x + 1\r\nEnd Function\r\n"), CComBSTR(L"VBScript"), CComVariant(bstrID));
+	hr = m_spIQSScriptSite->Evaluate(CComBSTR(L"1 * 2 * 3 * 4 * 5"), varContext, &varResult);
+
+	//m_spIQSScriptSite->ParsePinni
 
 	CComVariant varResultBSTR;
 	varResultBSTR.ChangeType(VT_BSTR, &varResult);
 	TCHAR szText[1024] = { };
 	_stprintf(szText, _T("Result: %s\r\n"), V_BSTR(&varResultBSTR));
-	CoFreeUnusedLibrariesEx(0, 0);
-	CoFreeUnusedLibrariesEx(0, 0);
 	OutputDebugString(szText);
 	MessageBox(szText, _T("Output"), MB_OK);
+}
+
+void CQuickScriptDlg::OnBnClickedCleanup()
+{
+	HRESULT hr = S_OK;
+
+	if (m_spIQSScriptSite)
+	{
+		hr = m_spIQSScriptSite->Close();
+		m_spIQSScriptSite = NULL;
+	}
+
+	CoFreeUnusedLibrariesEx(0, 0);
+	CoFreeUnusedLibrariesEx(0, 0);
 }

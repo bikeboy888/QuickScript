@@ -6,7 +6,11 @@ enum
 	PROPID_ScriptEngine,
 
 	METHID_Close,
-	METHID_Evaluate
+	METHID_Evaluate,
+	METHID_Execute,
+	METHID_ImportScript,
+	METHID_Open
+
 };
 
 // This file will be processed by the MIDL tool to
@@ -15,6 +19,16 @@ enum
 import "oaidl.idl";
 import "ocidl.idl";
 
+[
+	object,
+	uuid(CBD7F1C4-37B8-469D-B0C2-C283DF355C65),
+	dual,
+	nonextensible,
+	helpstring("IQSNet Interface"),
+	pointer_default(unique)
+]
+interface IQSNet : IDispatch{
+};
 [
 	uuid(9ED7F133-BEC0-4B73-A542-D7D86208A4C3),
 	version(1.0),
@@ -27,6 +41,10 @@ library QSLib
 	//interface IDocHostUIHandlerDispatch;
 	//interface IAxWinAmbientDispatchEx;
 
+	//----------------------------------------------------------------------
+	//
+	//----------------------------------------------------------------------
+
 	[
 		object,
 		uuid(2C6DA222-0C4C-411A-B2EC-9486359239FE),
@@ -37,6 +55,10 @@ library QSLib
 	]
 	interface IQSApplication : IDispatch{
 	};
+
+	//----------------------------------------------------------------------
+	//
+	//----------------------------------------------------------------------
 
 	[
 		object,
@@ -49,8 +71,14 @@ library QSLib
 	interface IQSScriptSite : IDispatch{
 		[id(PROPID_ScriptEngine), propput] HRESULT ScriptEngine(BSTR ScriptEngine);
 		[id(METHID_Close)] HRESULT Close();
-		[id(METHID_Evaluate)] HRESULT Evaluate(BSTR Scipt, VARIANT* Result);
+		[id(METHID_Evaluate)] HRESULT Evaluate([in] BSTR Script, [in, optional] VARIANT Context, [out, retval] VARIANT* Result);
+		[id(METHID_Execute)] HRESULT Execute([in] BSTR Script, [in, optional] VARIANT Context);
+		[id(METHID_ImportScript)] HRESULT ImportScript([in] BSTR Script, [in] BSTR ScriptEngine, [in, optional] VARIANT Context);
 	};
+
+	//----------------------------------------------------------------------
+	//
+	//----------------------------------------------------------------------
 
 	[
 		uuid(1CF388F9-847C-4F7D-B481-8E0166792D16),
@@ -60,6 +88,11 @@ library QSLib
 	{
 		[default] interface IQSApplication;
 	};
+
+	//----------------------------------------------------------------------
+	//
+	//----------------------------------------------------------------------
+
 	[
 		uuid(E3B84835-0590-4F24-8BC5-4CBA6FCF4605),
 		helpstring("QSScriptSite Class")
@@ -68,4 +101,18 @@ library QSLib
 	{
 		[default] interface IQSScriptSite;
 	};
+
+	//----------------------------------------------------------------------
+	//
+	//----------------------------------------------------------------------
+
+	[
+		uuid(179C9CA4-7077-44CB-8D75-B51E8A8362EC),
+		helpstring("QSNet Class")
+	]
+	coclass QSNet
+	{
+		[default] interface IQSNet;
+	};
+
 };

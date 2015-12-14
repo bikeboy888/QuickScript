@@ -1,0 +1,21 @@
+HKCR
+{
+	QS.Net = s 'QSNet Class'
+	{
+		CLSID = s '{179C9CA4-7077-44CB-8D75-B51E8A8362EC}'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {179C9CA4-7077-44CB-8D75-B51E8A8362EC} = s 'QSNet Class'
+		{
+			ProgID = s 'QS.Net'
+			VersionIndependentProgID = s 'QS.Net'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Free'
+			}
+			'TypeLib' = s '{9ED7F133-BEC0-4B73-A542-D7D86208A4C3}'
+		}
+	}
+}

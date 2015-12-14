@@ -1,4 +1,4 @@
-// QSScriptSite.h : Declaration of the CQSScriptSite
+// QSNet.h : Declaration of the CQSNet
 
 #pragma once
 #ifdef STANDARDSHELL_UI_MODEL
@@ -15,7 +15,7 @@
 #endif
 
 #include "QS_i.h"
-#include "ScriptSite.h"
+
 
 #if defined(_WIN32_WCE) && !defined(_CE_DCOM) && !defined(_CE_ALLOW_SINGLE_THREADED_OBJECTS_IN_MTA)
 #error "Single-threaded COM objects are not properly supported on Windows CE platform, such as the Windows Mobile platforms that do not include full DCOM support. Define _CE_ALLOW_SINGLE_THREADED_OBJECTS_IN_MTA to force ATL to support creating single-thread COM object's and allow use of it's single-threaded COM object implementations. The threading model in your rgs file was set to 'Free' as that is the only threading model supported in non DCOM Windows CE platforms."
@@ -23,26 +23,26 @@
 
 
 
-// CQSScriptSite
+// CQSNet
 
-class ATL_NO_VTABLE CQSScriptSite :
+class ATL_NO_VTABLE CQSNet :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CQSScriptSite, &CLSID_QSScriptSite>,
+	public CComCoClass<CQSNet, &CLSID_QSNet>,
 	public ISupportErrorInfo,
-	public IDispatchImpl<IQSScriptSite, &IID_IQSScriptSite, &LIBID_QSLib, /*wMajor =*/ 1, /*wMinor =*/ 0>
+	public IDispatchImpl<IQSNet, &IID_IQSNet, &LIBID_QSLib, /*wMajor =*/ 1, /*wMinor =*/ 0>
 {
 public:
-	CQSScriptSite() : m_pScriptSite(NULL)
+	CQSNet()
 	{
 	}
 
 #ifndef _CE_DCOM
-DECLARE_REGISTRY_RESOURCEID(IDR_QSSCRIPTSITE)
+DECLARE_REGISTRY_RESOURCEID(IDR_QSNET)
 #endif
 
 
-BEGIN_COM_MAP(CQSScriptSite)
-	COM_INTERFACE_ENTRY(IQSScriptSite)
+BEGIN_COM_MAP(CQSNet)
+	COM_INTERFACE_ENTRY(IQSNet)
 	COM_INTERFACE_ENTRY(IDispatch)
 	COM_INTERFACE_ENTRY(ISupportErrorInfo)
 END_COM_MAP()
@@ -50,37 +50,20 @@ END_COM_MAP()
 // ISupportsErrorInfo
 	STDMETHOD(InterfaceSupportsErrorInfo)(REFIID riid);
 
+
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
 	HRESULT FinalConstruct()
 	{
-		CoInitializeEx(NULL, COINIT_MULTITHREADED);
 		return S_OK;
 	}
 
 	void FinalRelease()
 	{
-		if (m_spIActiveScript || m_spIActiveScriptParse || m_pScriptSite)
-		{
-			Close();
-		}
-		CoUninitialize();
 	}
 
 public:
-	CScriptSite* m_pScriptSite;
-	CComPtr<IActiveScript> m_spIActiveScript;
-	CComPtr<IActiveScriptParse> m_spIActiveScriptParse;
-	CComPtr<IQSScriptSite> m_spImport;
-	STDMETHOD(ParseScriptText)(BSTR bstrScript, VARIANT varContext, DWORD dwFlags, VARIANT* pvarResult);
-
-public:
-	STDMETHOD(put_ScriptEngine)(BSTR bstrScriptEngine);
-	STDMETHOD(Close)();
-	STDMETHOD(Evaluate)(BSTR bstrScript, VARIANT varContext, VARIANT* pvarResult);
-	STDMETHOD(Execute)(BSTR bstrScript, VARIANT varContext);
-	STDMETHOD(ImportScript)(BSTR bstrScript, BSTR bstrScriptEngine, VARIANT varContext);
 
 };
 
-OBJECT_ENTRY_AUTO(__uuidof(QSScriptSite), CQSScriptSite)
+OBJECT_ENTRY_AUTO(__uuidof(QSNet), CQSNet)

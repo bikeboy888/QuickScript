@@ -66,17 +66,72 @@ STDMETHODIMP CQSScriptSite::Close()
 //
 //----------------------------------------------------------------------
 
-STDMETHODIMP CQSScriptSite::Evaluate(BSTR bstrScript, VARIANT* pvarResult)
+STDMETHODIMP CQSScriptSite::Evaluate(BSTR bstrScript, VARIANT varContext, VARIANT* pvarResult)
 {
 	HRESULT hr = S_OK;
 	if (!pvarResult) return E_INVALIDARG;
 	VariantInit(pvarResult);
+	CHECKHR(ParseScriptText(bstrScript, varContext, SCRIPTTEXT_ISEXPRESSION, pvarResult));
+	return hr;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSScriptSite::Execute(BSTR bstrScript, VARIANT varContext)
+{
+	HRESULT hr = S_OK;
+	CHECKHR(ParseScriptText(bstrScript, varContext, 0, NULL));
+	return hr;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSScriptSite::ImportScript(BSTR bstrScript, BSTR bstrScriptEngine, VARIANT varContext)
+{
+	HRESULT hr = S_OK;
+	//CoInitializeEx(NULL, COINIT_MULTITHREADED);
+	CComPtr<IQSScriptSite> spIQSScriptSite;
+	CHECKHR(CQSScriptSite::_CreatorClass::CreateInstance(NULL, IID_IQSScriptSite, (void**) &spIQSScriptSite));
+	CHECKHR(spIQSScriptSite->put_ScriptEngine(bstrScriptEngine));
+	VARIANT varContextEmpty = { };
+	CHECKHR(spIQSScriptSite->Execute(bstrScript, varContextEmpty));
+	CComVariant varResult;
+	CHECKHR(spIQSScriptSite->Evaluate(CComBSTR(L"f(5)"), varContextEmpty, &varResult));
+	CHECKHR(spIQSScriptSite->Close());
+	CComVariant varResultBSTR;
+	CHECKHR(varResultBSTR.ChangeType(VT_BSTR, &varResult));
+	TCHAR szText[1024] = { };
+	_stprintf(szText, _T("Result: f(5) = %s\r\n"), V_BSTR(&varResultBSTR));
+	OutputDebugString(szText);
+	spIQSScriptSite = NULL;
+	//CoUninitialize();
+	::CoFreeUnusedLibrariesEx(0, 0);
+	::CoFreeUnusedLibrariesEx(0, 0);
+	return S_OK;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSScriptSite::ParseScriptText(BSTR bstrScript, VARIANT varContext, DWORD dwFlags, VARIANT* pvarResult)
+{
+	HRESULT hr = S_OK;
+	if (pvarResult) VariantInit(pvarResult);
 	if (!m_spIActiveScriptParse) return E_POINTER;
+	DWORD dwContext = 0;
     CComVariant result;
     EXCEPINFO ei = { };
-    hr = m_spIActiveScriptParse->ParseScriptText(bstrScript, NULL, NULL, NULL, 0, 0, SCRIPTTEXT_ISEXPRESSION, &result, &ei);
+    hr = m_spIActiveScriptParse->ParseScriptText(bstrScript, NULL, NULL, NULL, 0, 0, dwFlags, &result, &ei);
 	if (FAILED(hr)) return S_FALSE;
-	CHECKHR(result.Detach(pvarResult));
+	if (pvarResult)
+	{
+		CHECKHR(result.Detach(pvarResult));
+	}
 	return hr;
 }
 

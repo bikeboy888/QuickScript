@@ -541,15 +541,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\QSApplication.rgs"
-				>
-			</File>
-			<File
 				RelativePath=".\QSppc.rc"
-				>
-			</File>
-			<File
-				RelativePath=".\QSScriptSite.rgs"
 				>
 			</File>
 		</Filter>
@@ -610,11 +602,31 @@
 				>
 			</File>
 			<File
+				RelativePath=".\QSApplication.rgs"
+				>
+			</File>
+			<File
+				RelativePath=".\QSNet.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\QSNet.h"
+				>
+			</File>
+			<File
+				RelativePath=".\QSNet.rgs"
+				>
+			</File>
+			<File
 				RelativePath=".\QSScriptSite.cpp"
 				>
 			</File>
 			<File
 				RelativePath=".\QSScriptSite.h"
+				>
+			</File>
+			<File
+				RelativePath=".\QSScriptSite.rgs"
 				>
 			</File>
 		</Filter>

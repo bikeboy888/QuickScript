@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include "..\QS\QS_i.h"
+
 // CQuickScriptDlg dialog
 class CQuickScriptDlg : public CDialog
 {
@@ -20,6 +22,7 @@ public:
 // Implementation
 protected:
 	HICON m_hIcon;
+	CComPtr<IQSScriptSite> m_spIQSScriptSite;
 
 	// Generated message map functions
 	virtual BOOL OnInitDialog();
@@ -29,4 +32,5 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedRun();
+	afx_msg void OnBnClickedCleanup();
 };

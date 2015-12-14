@@ -99,6 +99,7 @@ END
 IDR_QS                  REGISTRY                "QS.rgs"
 IDR_QSAPPLICATION       REGISTRY                "QSApplication.rgs"
 IDR_QSSCRIPTSITE        REGISTRY                "QSScriptSite.rgs"
+IDR_QSNET               REGISTRY                "QSNet.rgs"
 
 /////////////////////////////////////////////////////////////////////////////
 //
