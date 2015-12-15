@@ -5,7 +5,7 @@
 #include "QuickScript.h"
 #include "QuickScriptDlg.h"
 #include "..\QS\QS_i.c"
-#include "RegSvr.h"
+#include "..\QSUtil\RegSvr.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -42,6 +42,12 @@ BOOL CQuickScriptDlg::OnInitDialog()
 	//  when the application's main window is not a dialog
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
+
+	CEdit* edtScript = (CEdit*) GetDlgItem(EDT_SCRIPT);
+	if (edtScript)
+	{
+		edtScript->SetWindowText(L"Function f(x)\r\n  f = x + 2\r\nEnd Function\r\n");
+	}
 
 	// TODO: Add extra initialization here
 	
@@ -136,11 +142,13 @@ void CQuickScriptDlg::OnBnClickedRun()
 	VARIANT varContext = { };
 	CComVariant varResult;
 	CComBSTR bstrID(L"Script1234");
-	hr = m_spIQSScriptSite->ImportScript(CComBSTR(L"function f(x) { return x*x + 1; }"), CComBSTR(L"JScript"), CComVariant(bstrID));
+	//hr = m_spIQSScriptSite->ImportScript(CComBSTR(L"function f(x) { return x*x + 1; }"), CComBSTR(L"JScript"), CComVariant(bstrID));
 	//hr = m_spIQSScriptSite->ImportScript(CComBSTR(L"Function f(x)\r\n  f = x*x + 1\r\nEnd Function\r\n"), CComBSTR(L"VBScript"), CComVariant(bstrID));
-	hr = m_spIQSScriptSite->Evaluate(bstrScript, varContext, &varResult);
+	hr = m_spIQSScriptSite->Execute(bstrScript, varContext);
 
-	//m_spIQSScriptSite->ParsePinni
+
+	hr = m_spIQSScriptSite->InvokeMethod(CComBSTR(L"f"), CComVariant(5), CComVariant(), CComVariant(), &varResult);
+//m_spIQSScriptSite->ParsePinni
 
 	CComVariant varResultBSTR;
 	varResultBSTR.ChangeType(VT_BSTR, &varResult);

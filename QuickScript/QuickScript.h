@@ -10,7 +10,7 @@
 #ifdef POCKETPC2003_UI_MODEL
 #include "resourceppc.h"
 #endif 
-#include "CoInit.h"
+#include "..\QSUtil\CoInit.h"
 
 // CQuickScriptApp:
 // See QuickScript.cpp for the implementation of this class

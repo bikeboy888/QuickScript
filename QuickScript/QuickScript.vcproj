@@ -391,10 +391,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\RegSvr.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\stdafx.cpp"
 				>
 				<FileConfiguration
@@ -437,19 +433,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\CoInit.h"
-				>
-			</File>
-			<File
 				RelativePath=".\QuickScript.h"
 				>
 			</File>
 			<File
 				RelativePath=".\QuickScriptDlg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\RegSvr.h"
 				>
 			</File>
 			<File

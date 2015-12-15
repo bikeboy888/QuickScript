@@ -8,7 +8,7 @@
 #endif 
 
 #include "QS_i.h"
-#include "CoInit.h"
+#include "..\QSUtil\CoInit.h"
 
 class CQSModule : public CAtlDllModuleT< CQSModule >
 {

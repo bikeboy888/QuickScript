@@ -4,7 +4,6 @@
 #include "stdafx.h"
 #include "QuickScript.h"
 #include "QuickScriptDlg.h"
-#include "RegSvr.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -47,8 +46,6 @@ BOOL CQuickScriptApp::InitInstance()
 	// TODO: You should modify this string to be something appropriate
 	// such as the name of your company or organization
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
-
-	//RegSvr(L"QS.dll");
 
 	CQuickScriptDlg dlg;
 	m_pMainWnd = &dlg;
