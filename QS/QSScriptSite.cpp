@@ -43,6 +43,7 @@ STDMETHODIMP CQSScriptSite::put_ScriptEngine(BSTR bstrScriptEngine)
     CHECKHR(m_spIActiveScript->SetScriptSite(m_pScriptSite));
     CHECKHR(m_spIActiveScript->QueryInterface(IID_IActiveScriptParse, (void**) &m_spIActiveScriptParse));
     CHECKHR(m_spIActiveScriptParse->InitNew());
+    CHECKHR(m_spIActiveScript->SetScriptState(SCRIPTSTATE_CONNECTED));
 	return S_OK;
 }
 //----------------------------------------------------------------------
@@ -54,8 +55,9 @@ STDMETHODIMP CQSScriptSite::Close()
 	HRESULT hr = S_OK;
 	if (m_spIActiveScript)
 	{
-		hr = m_spIActiveScript->Close();
+		hr = m_spIActiveScript->SetScriptState(SCRIPTSTATE_INITIALIZED);
 		//hr = m_spIActiveScript->SetScriptState(SCRIPTSTATE_DISCONNECTED);
+		hr = m_spIActiveScript->Close();
 		m_spIActiveScript = NULL;
 	}
 	m_spIActiveScriptParse = NULL;
@@ -89,7 +91,7 @@ STDMETHODIMP CQSScriptSite::Evaluate(BSTR bstrScript, VARIANT varContext, VARIAN
 STDMETHODIMP CQSScriptSite::Execute(BSTR bstrScript, VARIANT varContext)
 {
 	HRESULT hr = S_OK;
-	CHECKHR(ParseScriptText(bstrScript, varContext, 0, NULL));
+	CHECKHR(ParseScriptText(bstrScript, varContext, SCRIPTTEXT_ISPERSISTENT, NULL));
 	return hr;
 }
 
