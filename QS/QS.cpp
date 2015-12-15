@@ -8,6 +8,7 @@
 #endif 
 
 #include "QS_i.h"
+#include "CoInit.h"
 
 class CQSModule : public CAtlDllModuleT< CQSModule >
 {
@@ -16,6 +17,10 @@ public :
 #ifndef _CE_DCOM
 	DECLARE_REGISTRY_APPID_RESOURCEID(IDR_QS, "{7ED50666-AC25-4058-9B80-0FD89D81DB5A}")
 #endif
+
+protected:
+	CCoInit m_CoInit;
+
 };
 
 CQSModule _AtlModule;

@@ -9,6 +9,7 @@ enum
 	METHID_Evaluate,
 	METHID_Execute,
 	METHID_ImportScript,
+	METHID_InvokeScript,
 	METHID_Open
 
 };
@@ -74,6 +75,8 @@ library QSLib
 		[id(METHID_Evaluate)] HRESULT Evaluate([in] BSTR Script, [in, optional] VARIANT Context, [out, retval] VARIANT* Result);
 		[id(METHID_Execute)] HRESULT Execute([in] BSTR Script, [in, optional] VARIANT Context);
 		[id(METHID_ImportScript)] HRESULT ImportScript([in] BSTR Script, [in] BSTR ScriptEngine, [in, optional] VARIANT Context);
+		[id(METHID_InvokeScript)] HRESULT InvokeScript([in] BSTR Name, [in, optional] VARIANT Arg1, [in, optional] VARIANT Arg2, [in, optional] VARIANT Arg3, [out, retval] VARIANT* Result);
+
 	};
 
 	//----------------------------------------------------------------------

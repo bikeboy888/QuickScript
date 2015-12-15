@@ -37,8 +37,8 @@ STDMETHODIMP CQSScriptSite::put_ScriptEngine(BSTR bstrScriptEngine)
 		CHECKHR(Close());
 	}
 
-    m_pScriptSite = new CScriptSite();
     CHECKHR(m_spIActiveScript.CoCreateInstance(bstrScriptEngine));
+    m_pScriptSite = new CScriptSite();
     CHECKHR(m_spIActiveScript->SetScriptSite(m_pScriptSite));
     CHECKHR(m_spIActiveScript->QueryInterface(IID_IActiveScriptParse, (void**) &m_spIActiveScriptParse));
     CHECKHR(m_spIActiveScriptParse->InitNew());
@@ -84,6 +84,38 @@ STDMETHODIMP CQSScriptSite::Execute(BSTR bstrScript, VARIANT varContext)
 	HRESULT hr = S_OK;
 	CHECKHR(ParseScriptText(bstrScript, varContext, 0, NULL));
 	return hr;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSScriptSite::InvokeScript(BSTR bstrName, VARIANT varArg1, VARIANT varArg2, VARIANT varArg3, VARIANT* pvarResult)
+{
+	HRESULT hr = S_OK;
+	if (pvarResult) VariantInit(pvarResult);
+	if (!m_spIActiveScript) return S_FALSE;
+
+	VARIANT* pvarArgs[3] =
+	{
+		&varArg1,
+		&varArg2,
+		&varArg3
+	};
+	int nArgs = 0;
+	while (nArgs < 3 && pvarArgs[nArgs]->vt != VT_EMPTY)
+	{
+		nArgs++;
+	}
+
+	CComPtr<IDispatch> spIDispatch;
+	CHECKHR(m_spIActiveScript->GetScriptDispatch(NULL, &spIDispatch));
+	DISPID dispId = 0;
+	hr = spIDispatch->GetIDsOfNames(IID_IUnknown, &bstrName, 1, (LCID) 0, &dispId);
+	if (FAILED(hr)) return S_FALSE;
+
+	//spIDispatch->Invoke(dispId, IID_IUnknown, (LCID) 0, 0, &dispParams, &varResult, &ei, NULL);
+	return S_OK;
 }
 
 //----------------------------------------------------------------------

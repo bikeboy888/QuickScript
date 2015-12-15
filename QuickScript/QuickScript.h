@@ -10,6 +10,7 @@
 #ifdef POCKETPC2003_UI_MODEL
 #include "resourceppc.h"
 #endif 
+#include "CoInit.h"
 
 // CQuickScriptApp:
 // See QuickScript.cpp for the implementation of this class
@@ -20,6 +21,9 @@ class CQuickScriptApp : public CWinApp
 public:
 	CQuickScriptApp();
 	
+protected:
+	CCoInit m_CoInit;
+
 // Overrides
 public:
 	virtual BOOL InitInstance();
