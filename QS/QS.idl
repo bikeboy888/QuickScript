@@ -21,16 +21,6 @@ import "oaidl.idl";
 import "ocidl.idl";
 
 [
-	object,
-	uuid(CBD7F1C4-37B8-469D-B0C2-C283DF355C65),
-	dual,
-	nonextensible,
-	helpstring("IQSNet Interface"),
-	pointer_default(unique)
-]
-interface IQSNet : IDispatch{
-};
-[
 	uuid(9ED7F133-BEC0-4B73-A542-D7D86208A4C3),
 	version(1.0),
 	helpstring("QS 1.0 Type Library")
@@ -41,9 +31,13 @@ library QSLib
 
 	//interface IDocHostUIHandlerDispatch;
 	//interface IAxWinAmbientDispatchEx;
+	interface IQSApplication;
+	interface IQSFile;
+	interface IQSNet;
+	interface IQSScriptSite;
 
 	//----------------------------------------------------------------------
-	//
+	// interface IQSApplication
 	//----------------------------------------------------------------------
 
 	[
@@ -58,7 +52,37 @@ library QSLib
 	};
 
 	//----------------------------------------------------------------------
-	//
+	// interface IQSFile
+	//----------------------------------------------------------------------
+
+	[
+		object,
+		uuid(110BBCE9-6C96-4B6E-A26B-81DDD5D3A845),
+		dual,
+		nonextensible,
+		helpstring("IQSFile Interface"),
+		pointer_default(unique)
+	]
+	interface IQSFile : IDispatch{
+	};
+
+	//----------------------------------------------------------------------
+	// interface IQSNet
+	//----------------------------------------------------------------------
+
+	[
+		object,
+		uuid(CBD7F1C4-37B8-469D-B0C2-C283DF355C65),
+		dual,
+		nonextensible,
+		helpstring("IQSNet Interface"),
+		pointer_default(unique)
+	]
+	interface IQSNet : IDispatch{
+	};
+
+	//----------------------------------------------------------------------
+	// interface IQSScriptSite
 	//----------------------------------------------------------------------
 
 	[
@@ -80,7 +104,7 @@ library QSLib
 	};
 
 	//----------------------------------------------------------------------
-	//
+	// coclass QSApplication
 	//----------------------------------------------------------------------
 
 	[
@@ -93,7 +117,33 @@ library QSLib
 	};
 
 	//----------------------------------------------------------------------
-	//
+	// coclass QSFile
+	//----------------------------------------------------------------------
+
+	[
+		uuid(846375FC-3C2F-4CDD-BACE-D465F8835FCA),
+		helpstring("QSFile Class")
+	]
+	coclass QSFile
+	{
+		[default] interface IQSFile;
+	};
+
+	//----------------------------------------------------------------------
+	// coclass QSNet
+	//----------------------------------------------------------------------
+
+	[
+		uuid(179C9CA4-7077-44CB-8D75-B51E8A8362EC),
+		helpstring("QSNet Class")
+	]
+	coclass QSNet
+	{
+		[default] interface IQSNet;
+	};
+
+	//----------------------------------------------------------------------
+	// coclass QSScriptSite
 	//----------------------------------------------------------------------
 
 	[
@@ -109,13 +159,5 @@ library QSLib
 	//
 	//----------------------------------------------------------------------
 
-	[
-		uuid(179C9CA4-7077-44CB-8D75-B51E8A8362EC),
-		helpstring("QSNet Class")
-	]
-	coclass QSNet
-	{
-		[default] interface IQSNet;
-	};
 
 };

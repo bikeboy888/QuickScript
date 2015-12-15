@@ -606,6 +606,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\QSFile.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\QSFile.h"
+				>
+			</File>
+			<File
+				RelativePath=".\QSFile.rgs"
+				>
+			</File>
+			<File
 				RelativePath=".\QSNet.cpp"
 				>
 			</File>

@@ -51,7 +51,13 @@ STDMETHODIMP CQSScriptSite::put_ScriptEngine(BSTR bstrScriptEngine)
 
 STDMETHODIMP CQSScriptSite::Close()
 {
-	m_spIActiveScript = NULL;
+	HRESULT hr = S_OK;
+	if (m_spIActiveScript)
+	{
+		hr = m_spIActiveScript->Close();
+		//hr = m_spIActiveScript->SetScriptState(SCRIPTSTATE_DISCONNECTED);
+		m_spIActiveScript = NULL;
+	}
 	m_spIActiveScriptParse = NULL;
 	if (m_pScriptSite)
 	{

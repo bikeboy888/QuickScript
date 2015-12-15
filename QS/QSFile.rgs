@@ -1,0 +1,21 @@
+HKCR
+{
+	QS.File = s 'QSFile Class'
+	{
+		CLSID = s '{846375FC-3C2F-4CDD-BACE-D465F8835FCA}'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {846375FC-3C2F-4CDD-BACE-D465F8835FCA} = s 'QSFile Class'
+		{
+			ProgID = s 'QS.File'
+			VersionIndependentProgID = s 'QS.File'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Free'
+			}
+			'TypeLib' = s '{9ED7F133-BEC0-4B73-A542-D7D86208A4C3}'
+		}
+	}
+}

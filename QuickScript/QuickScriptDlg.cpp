@@ -155,7 +155,7 @@ void CQuickScriptDlg::OnBnClickedRun()
 	TCHAR szText[1024] = { };
 	_stprintf(szText, _T("Result: %s\r\n"), V_BSTR(&varResultBSTR));
 	OutputDebugString(szText);
-	MessageBox(szText, _T("Output"), MB_OK);
+	//MessageBox(szText, _T("Output"), MB_OK);
 }
 
 void CQuickScriptDlg::OnBnClickedCleanup()
