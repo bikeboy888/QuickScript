@@ -1,4 +1,4 @@
-// QSFile.h : Declaration of the CQSFile
+// QSJScript.h : Declaration of the CQSJScript
 
 #pragma once
 #ifdef STANDARDSHELL_UI_MODEL
@@ -23,26 +23,26 @@
 
 
 
-// CQSFile
+// CQSJScript
 
-class ATL_NO_VTABLE CQSFile :
+class ATL_NO_VTABLE CQSJScript :
 	public CComObjectRootEx<CComSingleThreadModel>,
-	public CComCoClass<CQSFile, &CLSID_QSFile>,
+	public CComCoClass<CQSJScript, &CLSID_QSJScript>,
 	public ISupportErrorInfo,
-	public IDispatchImpl<IQSFile, &IID_IQSFile, &LIBID_QSLib, /*wMajor =*/ 1, /*wMinor =*/ 0>
+	public IDispatchImpl<IQSJScript, &IID_IQSJScript, &LIBID_QSLib, /*wMajor =*/ 1, /*wMinor =*/ 0>
 {
 public:
-	CQSFile() : m_hFile(INVALID_HANDLE_VALUE), m_CodePage(0)
+	CQSJScript()
 	{
 	}
 
 #ifndef _CE_DCOM
-DECLARE_REGISTRY_RESOURCEID(IDR_QSFILE)
+DECLARE_REGISTRY_RESOURCEID(IDR_QSJSCRIPT)
 #endif
 
 
-BEGIN_COM_MAP(CQSFile)
-	COM_INTERFACE_ENTRY(IQSFile)
+BEGIN_COM_MAP(CQSJScript)
+	COM_INTERFACE_ENTRY(IQSJScript)
 	COM_INTERFACE_ENTRY(IDispatch)
 	COM_INTERFACE_ENTRY(ISupportErrorInfo)
 END_COM_MAP()
@@ -53,29 +53,22 @@ END_COM_MAP()
 
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 
-	HRESULT FinalConstruct()
-	{
-		return S_OK;
-	}
+	HRESULT FinalConstruct();
 
 	void FinalRelease()
 	{
-		if (m_hFile != INVALID_HANDLE_VALUE)
+		if (m_spIQSScriptSite)
 		{
-			Close();
+			m_spIQSScriptSite->Close();
+			m_spIQSScriptSite = NULL;
 		}
-
+		CoFreeUnusedLibrariesEx(0, 0);
+		CoFreeUnusedLibrariesEx(0, 0);
 	}
 
-protected:
-	HANDLE m_hFile;
-	UINT m_CodePage;
-
 public:
-	STDMETHOD(Close)();
-	STDMETHOD(Open)(BSTR bstrPath, VARIANT_BOOL* pbOk);
-	STDMETHOD(ReadAll)(BSTR* pbstrText);
+	CComPtr<IQSScriptSite> m_spIQSScriptSite;
 
 };
 
-OBJECT_ENTRY_AUTO(__uuidof(QSFile), CQSFile)
+OBJECT_ENTRY_AUTO(__uuidof(QSJScript), CQSJScript)

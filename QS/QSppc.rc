@@ -101,6 +101,7 @@ IDR_QSAPPLICATION       REGISTRY                "QSApplication.rgs"
 IDR_QSSCRIPTSITE        REGISTRY                "QSScriptSite.rgs"
 IDR_QSNET               REGISTRY                "QSNet.rgs"
 IDR_QSFILE              REGISTRY                "QSFile.rgs"
+IDR_QSJSCRIPT           REGISTRY                "QSJScript.rgs"
 
 /////////////////////////////////////////////////////////////////////////////
 //

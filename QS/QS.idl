@@ -10,7 +10,8 @@ enum
 	METHID_Execute,
 	METHID_ImportScript,
 	METHID_InvokeMethod,
-	METHID_Open
+	METHID_Open,
+	METHID_ReadAll
 
 };
 
@@ -20,6 +21,16 @@ enum
 import "oaidl.idl";
 import "ocidl.idl";
 
+[
+	object,
+	uuid(592E77CF-7ADF-49E8-A30F-C616E3D4BFD2),
+	dual,
+	nonextensible,
+	helpstring("IQSJScript Interface"),
+	pointer_default(unique)
+]
+interface IQSJScript : IDispatch{
+};
 [
 	uuid(9ED7F133-BEC0-4B73-A542-D7D86208A4C3),
 	version(1.0),
@@ -64,6 +75,9 @@ library QSLib
 		pointer_default(unique)
 	]
 	interface IQSFile : IDispatch{
+		[id(METHID_Close)] HRESULT Close();
+		[id(METHID_Open)] HRESULT Open([in] BSTR Path, [out, retval] VARIANT_BOOL* Ok);
+		[id(METHID_ReadAll)] HRESULT ReadAll([out, retval] BSTR* Text);
 	};
 
 	//----------------------------------------------------------------------
@@ -160,4 +174,12 @@ library QSLib
 	//----------------------------------------------------------------------
 
 
+	[
+		uuid(FAA3326B-3270-4533-B5E6-60454A95A75A),
+		helpstring("QSJScript Class")
+	]
+	coclass QSJScript
+	{
+		[default] interface IQSJScript;
+	};
 };

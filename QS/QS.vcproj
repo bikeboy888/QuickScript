@@ -618,6 +618,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\QSJScript.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\QSJScript.h"
+				>
+			</File>
+			<File
+				RelativePath=".\QSJScript.rgs"
+				>
+			</File>
+			<File
 				RelativePath=".\QSNet.cpp"
 				>
 			</File>

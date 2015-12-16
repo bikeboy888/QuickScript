@@ -10,8 +10,15 @@ HRESULT InvokeMethod(IDispatch* pIDispatch, LPOLESTR szName, VARIANT varArg1, VA
 	DISPID DispID = DISPID_UNKNOWN;
 	LCID lcid = 0;
 
-	hr = pIDispatch->GetIDsOfNames(IID_NULL, &szName, 1, lcid, &DispID);
-	if (FAILED(hr)) return S_FALSE;
+	if (szName == NULL)
+	{
+		DispID = DISPID_VALUE;
+	}
+	else
+	{
+		hr = pIDispatch->GetIDsOfNames(IID_NULL, &szName, 1, lcid, &DispID);
+		if (FAILED(hr)) return S_FALSE;
+	}
 
 	VARIANT* rgArgs[3] =
 	{

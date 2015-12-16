@@ -104,9 +104,11 @@ STDMETHODIMP CQSScriptSite::InvokeMethod(BSTR bstrName, VARIANT varArg1, VARIANT
 	HRESULT hr = S_OK;
 	if (pvarResult) VariantInit(pvarResult);
 	if (!m_spIActiveScript) return S_FALSE;
-	CComPtr<IDispatch> spIDispatch;
+	//CComPtr<IDispatch> spIDispatch;
+	IDispatch* spIDispatch = NULL;
 	CHECKHR(m_spIActiveScript->GetScriptDispatch(NULL, &spIDispatch));
 	CHECKHR(::InvokeMethod(spIDispatch, (LPOLESTR) bstrName, varArg1, varArg2, varArg3, pvarResult));
+	spIDispatch = NULL;
 	return hr;
 }
 

@@ -1,0 +1,21 @@
+HKCR
+{
+	QS.JScript = s 'QSJScript Class'
+	{
+		CLSID = s '{FAA3326B-3270-4533-B5E6-60454A95A75A}'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {FAA3326B-3270-4533-B5E6-60454A95A75A} = s 'QSJScript Class'
+		{
+			ProgID = s 'QS.JScript'
+			VersionIndependentProgID = s 'QS.JScript'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Free'
+			}
+			'TypeLib' = s '{9ED7F133-BEC0-4B73-A542-D7D86208A4C3}'
+		}
+	}
+}

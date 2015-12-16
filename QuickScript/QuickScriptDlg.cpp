@@ -6,6 +6,7 @@
 #include "QuickScriptDlg.h"
 #include "..\QS\QS_i.c"
 #include "..\QSUtil\RegSvr.h"
+#include "..\QSUtil\DebugMemoryStatus.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -124,6 +125,7 @@ void CQuickScriptDlg::OnBnClickedRun()
 
 	if (!m_spIQSScriptSite)
 	{
+		//hr = E_FAIL;
 		hr = m_spIQSScriptSite.CoCreateInstance(CLSID_QSScriptSite);
 		if (FAILED(hr))
 		{
@@ -132,6 +134,10 @@ void CQuickScriptDlg::OnBnClickedRun()
 		}
 		hr = m_spIQSScriptSite->put_ScriptEngine(CComBSTR(L"VBScript"));
 	}
+
+	CComPtr<IQSJScript> spIQSJScript;
+	hr = spIQSJScript.CoCreateInstance(CLSID_QSJScript);
+	spIQSJScript = NULL;
 
 	CEdit* edtScript = (CEdit*) GetDlgItem(EDT_SCRIPT);
 	if (!edtScript) return;
@@ -156,6 +162,17 @@ void CQuickScriptDlg::OnBnClickedRun()
 	_stprintf(szText, _T("Result: %s\r\n"), V_BSTR(&varResultBSTR));
 	OutputDebugString(szText);
 	//MessageBox(szText, _T("Output"), MB_OK);
+
+	if (m_spIQSScriptSite)
+	{
+		hr = m_spIQSScriptSite->Close();
+		m_spIQSScriptSite = NULL;
+	}
+
+	CoFreeUnusedLibrariesEx(0, 0);
+	CoFreeUnusedLibrariesEx(0, 0);
+
+	DebugMemoryStatus();
 }
 
 void CQuickScriptDlg::OnBnClickedCleanup()
@@ -170,4 +187,23 @@ void CQuickScriptDlg::OnBnClickedCleanup()
 
 	CoFreeUnusedLibrariesEx(0, 0);
 	CoFreeUnusedLibrariesEx(0, 0);
+
+	TCHAR szText[1024] = { };
+	MEMORYSTATUS MS = { };
+	::GlobalMemoryStatus(&MS);
+	/*
+	DWORD  dwLength;
+  DWORD  dwMemoryLoad;
+  SIZE_T dwTotalPhys;
+  SIZE_T dwAvailPhys;
+  SIZE_T dwTotalPageFile;
+  SIZE_T dwAvailPageFile;
+  SIZE_T dwTotalVirtual;
+  SIZE_T dwAvailVirtual;
+  */
+	_stprintf(szText, _T("Phys=%d/%d Virt=%d/%d\r\n"),
+		MS.dwAvailPhys, MS.dwTotalPhys,
+		MS.dwAvailVirtual, MS.dwTotalVirtual);
+	OutputDebugString(szText);
+	//_stprintf(szText, _T("Page = %d / %d\r\n"), MS.dwAvailPageFile, MS.dwTotalPageFile);
 }
