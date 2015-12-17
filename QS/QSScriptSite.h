@@ -77,7 +77,6 @@ public:
 	STDMETHOD(Close)();
 	STDMETHOD(Evaluate)(BSTR bstrScript, VARIANT varContext, VARIANT* pvarResult);
 	STDMETHOD(Execute)(BSTR bstrScript, VARIANT varContext);
-	STDMETHOD(ImportScript)(BSTR bstrScript, BSTR bstrScriptEngine, VARIANT varContext);
 	STDMETHOD(InvokeMethod)(BSTR bstrName, VARIANT varArg1, VARIANT varArg2, VARIANT varArg3, VARIANT* pvarResult);
 
 };

@@ -69,6 +69,9 @@ END_COM_MAP()
 public:
 	CComPtr<IQSScriptSite> m_spIQSScriptSite;
 
+public:
+	STDMETHOD(EncodeURIComponent)(BSTR bstrURI, BSTR* pbstrEncodedURI);
+
 };
 
 OBJECT_ENTRY_AUTO(__uuidof(QSJScript), CQSJScript)

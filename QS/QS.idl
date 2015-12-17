@@ -6,9 +6,9 @@ enum
 	PROPID_ScriptEngine,
 
 	METHID_Close,
+	METHID_EncodeURICOmponent,
 	METHID_Evaluate,
 	METHID_Execute,
-	METHID_ImportScript,
 	METHID_InvokeMethod,
 	METHID_Open,
 	METHID_ReadAll
@@ -21,16 +21,6 @@ enum
 import "oaidl.idl";
 import "ocidl.idl";
 
-[
-	object,
-	uuid(592E77CF-7ADF-49E8-A30F-C616E3D4BFD2),
-	dual,
-	nonextensible,
-	helpstring("IQSJScript Interface"),
-	pointer_default(unique)
-]
-interface IQSJScript : IDispatch{
-};
 [
 	uuid(9ED7F133-BEC0-4B73-A542-D7D86208A4C3),
 	version(1.0),
@@ -81,6 +71,22 @@ library QSLib
 	};
 
 	//----------------------------------------------------------------------
+	// interface IQSJScript
+	//----------------------------------------------------------------------
+
+	[
+		object,
+		uuid(592E77CF-7ADF-49E8-A30F-C616E3D4BFD2),
+		dual,
+		nonextensible,
+		helpstring("IQSJScript Interface"),
+		pointer_default(unique)
+	]
+	interface IQSJScript : IDispatch{
+		[id(METHID_EncodeURICOmponent)] HRESULT EncodeURIComponent([in] BSTR URI, [out, retval] BSTR* EncodedURI);
+	};
+
+	//----------------------------------------------------------------------
 	// interface IQSNet
 	//----------------------------------------------------------------------
 
@@ -95,7 +101,7 @@ library QSLib
 	interface IQSNet : IDispatch{
 	};
 
-	//----------------------------------------------------------------------
+	//---------------------------------------------------------------------
 	// interface IQSScriptSite
 	//----------------------------------------------------------------------
 
@@ -112,7 +118,6 @@ library QSLib
 		[id(METHID_Close)] HRESULT Close();
 		[id(METHID_Evaluate)] HRESULT Evaluate([in] BSTR Script, [in, optional] VARIANT Context, [out, retval] VARIANT* Result);
 		[id(METHID_Execute)] HRESULT Execute([in] BSTR Script, [in, optional] VARIANT Context);
-		[id(METHID_ImportScript)] HRESULT ImportScript([in] BSTR Script, [in] BSTR ScriptEngine, [in, optional] VARIANT Context);
 		[id(METHID_InvokeMethod)] HRESULT InvokeMethod([in] BSTR Name, [in, optional] VARIANT Arg1, [in, optional] VARIANT Arg2, [in, optional] VARIANT Arg3, [out, retval] VARIANT* Result);
 
 	};
@@ -141,6 +146,19 @@ library QSLib
 	coclass QSFile
 	{
 		[default] interface IQSFile;
+	};
+
+	//----------------------------------------------------------------------
+	// coclass QSJScript
+	//----------------------------------------------------------------------
+
+	[
+		uuid(FAA3326B-3270-4533-B5E6-60454A95A75A),
+		helpstring("QSJScript Class")
+	]
+	coclass QSJScript
+	{
+		[default] interface IQSJScript;
 	};
 
 	//----------------------------------------------------------------------
@@ -173,13 +191,4 @@ library QSLib
 	//
 	//----------------------------------------------------------------------
 
-
-	[
-		uuid(FAA3326B-3270-4533-B5E6-60454A95A75A),
-		helpstring("QSJScript Class")
-	]
-	coclass QSJScript
-	{
-		[default] interface IQSJScript;
-	};
 };

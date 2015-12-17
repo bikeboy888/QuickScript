@@ -337,15 +337,15 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\DebugMemoryStatus.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\DebugVariant.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\InvokeMethod.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\OutputDebugMemoryStatus.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\OutputDebugVariant.cpp"
 				>
 			</File>
 			<File
@@ -388,6 +388,10 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\VariantToBSTR.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -395,15 +399,15 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\DebugMemoryStatus.h"
-				>
-			</File>
-			<File
-				RelativePath=".\DebugVariant.h"
-				>
-			</File>
-			<File
 				RelativePath=".\InvokeMethod.h"
+				>
+			</File>
+			<File
+				RelativePath=".\OutputDebugMemoryStatus.h"
+				>
+			</File>
+			<File
+				RelativePath=".\OutputDebugVariant.h"
 				>
 			</File>
 			<File
@@ -412,6 +416,10 @@
 			</File>
 			<File
 				RelativePath=".\stdafx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\VariantToBSTR.h"
 				>
 			</File>
 		</Filter>

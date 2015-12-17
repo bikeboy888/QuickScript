@@ -106,40 +106,9 @@ STDMETHODIMP CQSScriptSite::InvokeMethod(BSTR bstrName, VARIANT varArg1, VARIANT
 	if (pvarResult) VariantInit(pvarResult);
 	if (!m_spIActiveScript) return S_FALSE;
 	CComPtr<IDispatch> spIDispatch;
-	//IDispatch* spIDispatch = NULL;
 	CHECKHR(m_spIActiveScript->GetScriptDispatch(NULL, &spIDispatch));
 	CHECKHR(::InvokeMethod(spIDispatch, (LPOLESTR) bstrName, varArg1, varArg2, varArg3, pvarResult));
-	//CHECKHR(::InvokeMethod(m_spIDispatch, (LPOLESTR) bstrName, varArg1, varArg2, varArg3, pvarResult));
-	//spIDispatch = NULL;
 	return hr;
-}
-
-//----------------------------------------------------------------------
-//
-//----------------------------------------------------------------------
-
-STDMETHODIMP CQSScriptSite::ImportScript(BSTR bstrScript, BSTR bstrScriptEngine, VARIANT varContext)
-{
-	HRESULT hr = S_OK;
-	//CoInitializeEx(NULL, COINIT_MULTITHREADED);
-	CComPtr<IQSScriptSite> spIQSScriptSite;
-	CHECKHR(CQSScriptSite::_CreatorClass::CreateInstance(NULL, IID_IQSScriptSite, (void**) &spIQSScriptSite));
-	CHECKHR(spIQSScriptSite->put_ScriptEngine(bstrScriptEngine));
-	VARIANT varContextEmpty = { };
-	CHECKHR(spIQSScriptSite->Execute(bstrScript, varContextEmpty));
-	CComVariant varResult;
-	CHECKHR(spIQSScriptSite->Evaluate(CComBSTR(L"f(5)"), varContextEmpty, &varResult));
-	CHECKHR(spIQSScriptSite->Close());
-	CComVariant varResultBSTR;
-	CHECKHR(varResultBSTR.ChangeType(VT_BSTR, &varResult));
-	TCHAR szText[1024] = { };
-	_stprintf(szText, _T("Result: f(5) = %s\r\n"), V_BSTR(&varResultBSTR));
-	OutputDebugString(szText);
-	spIQSScriptSite = NULL;
-	//CoUninitialize();
-	::CoFreeUnusedLibrariesEx(0, 0);
-	::CoFreeUnusedLibrariesEx(0, 0);
-	return S_OK;
 }
 
 //----------------------------------------------------------------------

@@ -6,8 +6,8 @@
 #include "QuickScriptDlg.h"
 #include "..\QS\QS_i.c"
 #include "..\QSUtil\RegSvr.h"
-#include "..\QSUtil\DebugMemoryStatus.h"
-#include "..\QSUtil\DebugVariant.h"
+#include "..\QSUtil\OutputDebugMemoryStatus.h"
+#include "..\QSUtil\OutputDebugVariant.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -155,13 +155,18 @@ void CQuickScriptDlg::OnBnClickedRun()
 
 
 	hr = m_spIQSScriptSite->InvokeMethod(CComBSTR(L"f"), CComVariant(5), CComVariant(), CComVariant(), &varResult);
+	OutputDebugString(L"Result: ");
+	OutputDebugVariant(varResult);
+	OutputDebugString(L"\r\n");
 //m_spIQSScriptSite->ParsePinni
 
+	/*
 	CComVariant varResultBSTR;
 	varResultBSTR.ChangeType(VT_BSTR, &varResult);
 	TCHAR szText[1024] = { };
 	_stprintf(szText, _T("Result: %s\r\n"), V_BSTR(&varResultBSTR));
 	OutputDebugString(szText);
+	*/
 	//MessageBox(szText, _T("Output"), MB_OK);
 
 	if (m_spIQSScriptSite)
@@ -170,10 +175,11 @@ void CQuickScriptDlg::OnBnClickedRun()
 		m_spIQSScriptSite = NULL;
 	}
 
-	CoFreeUnusedLibrariesEx(0, 0);
-	CoFreeUnusedLibrariesEx(0, 0);
+	//CoFreeUnusedLibrariesEx(0, 0);
+	//CoFreeUnusedLibrariesEx(0, 0);
 
-	DebugMemoryStatus();
+	OutputDebugMemoryStatus();
+	OutputDebugString(L"\r\n");
 }
 
 void CQuickScriptDlg::OnBnClickedCleanup()

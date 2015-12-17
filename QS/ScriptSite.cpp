@@ -49,8 +49,48 @@ STDMETHODIMP CScriptSite::QueryInterface(REFIID riid, void **ppvObject)
 //
 //----------------------------------------------------------------------
 
+class CExcepInfo : public EXCEPINFO
+{
+public:
+	~CExcepInfo() { Clear(); }
+
+	void Clear()
+	{
+		if (bstrSource)
+		{
+			SysFreeString(bstrSource);
+			bstrSource = NULL;
+		}
+		if (bstrDescription)
+		{
+			SysFreeString(bstrDescription);
+			bstrDescription = NULL;
+		}
+		if (bstrHelpFile)
+		{
+			SysFreeString(bstrHelpFile);
+			bstrHelpFile = NULL;
+		}
+	}
+
+};
+
 STDMETHODIMP CScriptSite::OnScriptError(IActiveScriptError *pIActiveScriptError)
 {
+	HRESULT hr = S_OK;
+	if (!pIActiveScriptError) return S_OK;
+
+	CExcepInfo ei;
+	hr = pIActiveScriptError->GetExceptionInfo(&ei);
+
+	CComBSTR bstrSource;
+	hr = pIActiveScriptError->GetSourceLineText(&bstrSource);
+
+	DWORD dwContext = 0;
+	ULONG nLine = 0;
+	LONG nPos = 0;
+	hr = pIActiveScriptError->GetSourcePosition(&dwContext, &nLine, &nPos);
+
 	return S_OK;
 }
 

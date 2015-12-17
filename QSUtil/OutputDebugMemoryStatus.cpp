@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "DebugMemoryStatus.h"
+#include "OutputDebugMemoryStatus.h"
 
-void DebugMemoryStatus()
+void OutputDebugMemoryStatus()
 {
 	TCHAR szText[1024] = { };
 	static MEMORYSTATUS LastMS = { };
@@ -18,7 +18,7 @@ void DebugMemoryStatus()
   SIZE_T dwTotalVirtual;
   SIZE_T dwAvailVirtual;
   */
-	_stprintf(szText, _T("Phys=%d (%d) Virt=%d (%d)\r\n"),
+	_stprintf(szText, _T("Phys=%d (%d) Virt=%d (%d)"),
 		MS.dwAvailPhys, MS.dwAvailPhys - LastMS.dwAvailPhys,
 		MS.dwAvailVirtual, MS.dwAvailVirtual - LastMS.dwAvailVirtual);
 	OutputDebugString(szText);
