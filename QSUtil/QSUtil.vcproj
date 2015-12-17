@@ -341,6 +341,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\DebugVariant.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\InvokeMethod.cpp"
 				>
 			</File>
@@ -392,6 +396,10 @@
 			>
 			<File
 				RelativePath=".\DebugMemoryStatus.h"
+				>
+			</File>
+			<File
+				RelativePath=".\DebugVariant.h"
 				>
 			</File>
 			<File

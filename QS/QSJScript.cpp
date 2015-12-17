@@ -3,6 +3,7 @@
 #include "stdafx.h"
 #include "QSJScript.h"
 #include "QSScriptSite.h"
+#include "..\QSUtil\DebugVariant.h"
 
 // CQSJScript
 
@@ -37,16 +38,30 @@ HRESULT CQSJScript::FinalConstruct()
 	CHECKHR(m_spIQSScriptSite->put_ScriptEngine(CComBSTR(L"JScript")));
 
 	CComBSTR bstrScript(
-		L"function f(x) { return x + 1000; }\n"
+		L"function f(x) { return x + x; }\n"
 		L"function jsEncodeURIComponent(uri) { return encodeURIComponent(uri); }\n"
 		);
 	CHECKHR(m_spIQSScriptSite->Execute(bstrScript, CComVariant()));
 
 	CComVariant varResult;
-	CHECKHR(m_spIQSScriptSite->InvokeMethod(CComBSTR(L"f"), CComVariant(47), CComVariant(), CComVariant(), &varResult));
 
+	for (int i = 0; i < 1000; i++)
+	{
+		CHECKHR(m_spIQSScriptSite->InvokeMethod(CComBSTR(L"f"), CComVariant(47), CComVariant(), CComVariant(), &varResult));
+		varResult.Clear();
+	}
+
+	CHECKHR(m_spIQSScriptSite->InvokeMethod(CComBSTR(L"f"), CComVariant(47), CComVariant(), CComVariant(), &varResult));
+	DebugVariant(varResult);
 	varResult.Clear();
+
+	CHECKHR(m_spIQSScriptSite->InvokeMethod(CComBSTR(L"f"), CComVariant(L"abc"), CComVariant(), CComVariant(), &varResult));
+	DebugVariant(varResult);
+	varResult.Clear();
+
 	CHECKHR(m_spIQSScriptSite->InvokeMethod(CComBSTR(L"jsEncodeURIComponent"), CComVariant(L"http://www.google.com?q=abc"), CComVariant(), CComVariant(), &varResult));
+	DebugVariant(varResult);
+	varResult.Clear();
 
 	return S_OK;
 }

@@ -55,7 +55,7 @@ STDMETHODIMP CQSScriptSite::Close()
 	HRESULT hr = S_OK;
 	if (m_spIActiveScript)
 	{
-		hr = m_spIActiveScript->SetScriptState(SCRIPTSTATE_INITIALIZED);
+		//hr = m_spIActiveScript->SetScriptState(SCRIPTSTATE_INITIALIZED);
 		//hr = m_spIActiveScript->SetScriptState(SCRIPTSTATE_DISCONNECTED);
 		hr = m_spIActiveScript->Close();
 		m_spIActiveScript = NULL;
@@ -91,7 +91,8 @@ STDMETHODIMP CQSScriptSite::Evaluate(BSTR bstrScript, VARIANT varContext, VARIAN
 STDMETHODIMP CQSScriptSite::Execute(BSTR bstrScript, VARIANT varContext)
 {
 	HRESULT hr = S_OK;
-	CHECKHR(ParseScriptText(bstrScript, varContext, SCRIPTTEXT_ISPERSISTENT, NULL));
+	//CHECKHR(ParseScriptText(bstrScript, varContext, SCRIPTTEXT_ISPERSISTENT, NULL));
+	CHECKHR(ParseScriptText(bstrScript, varContext, 0, NULL));
 	return hr;
 }
 
@@ -104,11 +105,12 @@ STDMETHODIMP CQSScriptSite::InvokeMethod(BSTR bstrName, VARIANT varArg1, VARIANT
 	HRESULT hr = S_OK;
 	if (pvarResult) VariantInit(pvarResult);
 	if (!m_spIActiveScript) return S_FALSE;
-	//CComPtr<IDispatch> spIDispatch;
-	IDispatch* spIDispatch = NULL;
+	CComPtr<IDispatch> spIDispatch;
+	//IDispatch* spIDispatch = NULL;
 	CHECKHR(m_spIActiveScript->GetScriptDispatch(NULL, &spIDispatch));
 	CHECKHR(::InvokeMethod(spIDispatch, (LPOLESTR) bstrName, varArg1, varArg2, varArg3, pvarResult));
-	spIDispatch = NULL;
+	//CHECKHR(::InvokeMethod(m_spIDispatch, (LPOLESTR) bstrName, varArg1, varArg2, varArg3, pvarResult));
+	//spIDispatch = NULL;
 	return hr;
 }
 

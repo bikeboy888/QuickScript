@@ -7,6 +7,7 @@
 #include "..\QS\QS_i.c"
 #include "..\QSUtil\RegSvr.h"
 #include "..\QSUtil\DebugMemoryStatus.h"
+#include "..\QSUtil\DebugVariant.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
