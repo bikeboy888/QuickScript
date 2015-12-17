@@ -71,6 +71,10 @@ public:
 
 public:
 	STDMETHOD(EncodeURIComponent)(BSTR bstrURI, BSTR* pbstrEncodedURI);
+	STDMETHOD(Parse)(BSTR bstrJSON, VARIANT* pvarJsObject);
+	STDMETHOD(GetObjKey)(VARIANT varJsObject, VARIANT varKey, VARIANT* pvarValue);
+	STDMETHOD(SetObjKey)(VARIANT varJsObject, VARIANT varKey, VARIANT varValue);
+	STDMETHOD(Stringify)(VARIANT varJsObject, VARIANT varReplacer, VARIANT varSpace, BSTR* pbstrJSON);
 
 };
 

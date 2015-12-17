@@ -136,9 +136,11 @@ void CQuickScriptDlg::OnBnClickedRun()
 		hr = m_spIQSScriptSite->put_ScriptEngine(CComBSTR(L"VBScript"));
 	}
 
+	/*
 	CComPtr<IQSJScript> spIQSJScript;
 	hr = spIQSJScript.CoCreateInstance(CLSID_QSJScript);
 	spIQSJScript = NULL;
+	*/
 
 	CEdit* edtScript = (CEdit*) GetDlgItem(EDT_SCRIPT);
 	if (!edtScript) return;

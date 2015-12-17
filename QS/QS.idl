@@ -6,12 +6,16 @@ enum
 	PROPID_ScriptEngine,
 
 	METHID_Close,
-	METHID_EncodeURICOmponent,
+	METHID_EncodeURIComponent,
 	METHID_Evaluate,
 	METHID_Execute,
+	METHID_GetObjKey,
 	METHID_InvokeMethod,
 	METHID_Open,
-	METHID_ReadAll
+	METHID_Parse,
+	METHID_ReadAll,
+	METHID_SetObjKey,
+	METHID_Stringify
 
 };
 
@@ -83,7 +87,12 @@ library QSLib
 		pointer_default(unique)
 	]
 	interface IQSJScript : IDispatch{
-		[id(METHID_EncodeURICOmponent)] HRESULT EncodeURIComponent([in] BSTR URI, [out, retval] BSTR* EncodedURI);
+		[id(METHID_EncodeURIComponent)] HRESULT EncodeURIComponent([in] BSTR URI, [out, retval] BSTR* EncodedURI);
+		[id(METHID_GetObjKey)] HRESULT GetObjKey([in] VARIANT JsObject, [in] VARIANT Key, [out, retval] VARIANT* Value);
+		[id(METHID_Parse)] HRESULT Parse([in] BSTR JSON, [out, retval] VARIANT* JsObject);
+		[id(METHID_SetObjKey)] HRESULT SetObjKey([in] VARIANT JsObject, [in] VARIANT Key, [in] VARIANT Value);
+		[id(METHID_Stringify)] HRESULT Stringify([in] VARIANT JsObject, [in, optional] VARIANT Replacer, [in, optional] VARIANT Space, [out, retval] BSTR* JSON);
+
 	};
 
 	//----------------------------------------------------------------------
