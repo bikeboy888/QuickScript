@@ -27,9 +27,10 @@ HRESULT InvokeMethod(IDispatch* pIDispatch, LPOLESTR szName, VARIANT varArg1, VA
 		&varArg3
 	};
 	int nArgs = 0;
-	while (nArgs < 3 && rgArgs[nArgs]->vt != VT_EMPTY)
+	for (int i = 0; i < 3; i++)
 	{
-		nArgs++;
+		if (rgArgs[i]->vt != VT_EMPTY)
+			nArgs = i + 1;
 	}
 
 	CComVariant Args[3];

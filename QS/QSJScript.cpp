@@ -40,11 +40,11 @@ HRESULT CQSJScript::FinalConstruct()
 
 	CComBSTR bstrScript(
 		L"function jsEncodeURIComponent(uri) { return encodeURIComponent(uri); }\n"
-		L"function jsTest(x) { return x + x; }\n"
+		L"function jsTest(x,y,z) { return x + x; }\n"
 		L"function jsParse(s) { try { return JSON.parse(s); } catch (err) { return err; } }\n"
 		L"function jsGetObjKey(o,k) { return o[k]; }\n"
 		L"function jsSetObjKey(o,k,v) { o[k] = v; }\n"
-		L"function jsStringify(o) { return JSON.stringify(o); }\n"
+		L"function jsStringify(o,r,s) { return JSON.stringify(o,r,s); }\n"
 		);
 	CHECKHR(m_spIQSScriptSite->Execute(bstrScript, CComVariant()));
 
@@ -88,7 +88,7 @@ HRESULT CQSJScript::FinalConstruct()
 	varTemp.Clear();
 
 	CComVariant varStr;
-	CHECKHR(m_spIQSScriptSite->InvokeMethod(CComBSTR(L"jsStringify"), varObj, CComVariant(), CComVariant(), &varStr));
+	CHECKHR(m_spIQSScriptSite->InvokeMethod(CComBSTR(L"jsStringify"), varObj, CComVariant(), CComVariant(2), &varStr));
 	OutputDebugString(L"String: ");
 	OutputDebugVariant(varStr);
 	OutputDebugString(L"\r\n");
