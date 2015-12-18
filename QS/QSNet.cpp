@@ -32,7 +32,7 @@ STDMETHODIMP CQSNet::Close()
 	BOOL bOk = TRUE;
 	DWORD dwLastError = ERROR_SUCCESS;
 
-	if (m_bAsync == TRUE && m_hInternet != NULL)
+	if (m_bAsync == VARIANT_TRUE && m_hInternet != NULL)
 	{
 		InternetSetStatusCallback(m_hInternet, NULL);
 	}
@@ -348,6 +348,7 @@ STDMETHODIMP CQSNet::DoInternetReadFile()
 #endif
 			if (dwRead == 0)
 			{
+				CHECKHR(Close());
 				return S_OK;
 			}
 		}
@@ -421,6 +422,12 @@ STDMETHODIMP CQSNet::Open(BSTR bstrMethod, BSTR bstrURL, VARIANT varAsync)
 			m_hOpenEvent = NULL;
 		}
 	}
+	else
+	{
+		CHECKHR(DoInternetOpen());
+		CHECKHR(DoInternetConnect());
+		CHECKHR(DoHttpOpenRequest());
+	}
 
 	return S_OK;
 }
@@ -433,6 +440,10 @@ STDMETHODIMP CQSNet::Send(VARIANT varBody)
 {
 	HRESULT hr = S_OK;
 	CHECKHR(DoHttpSendRequest());
+	if (m_bAsync != VARIANT_TRUE)
+	{
+		CHECKHR(DoInternetReadFile());
+	}
 	return S_OK;
 }
 

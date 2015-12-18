@@ -143,6 +143,7 @@ void CQuickScriptDlg::OnBnClickedRun()
 	m_spIQSNet = NULL;
 	hr = m_spIQSNet.CoCreateInstance(CLSID_QSNet);
 	hr = m_spIQSNet->Open(CComBSTR("GET"), bstrURL, CComVariant(true));
+	//hr = m_spIQSNet->Open(CComBSTR("GET"), bstrURL, CComVariant(false));
 	hr = m_spIQSNet->Send(CComVariant());
 	//hr = spIQSNet->Close();
 	//spIQSNet = NULL;
