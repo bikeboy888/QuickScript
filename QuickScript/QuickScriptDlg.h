@@ -23,6 +23,7 @@ public:
 protected:
 	HICON m_hIcon;
 	CComPtr<IQSScriptSite> m_spIQSScriptSite;
+	CComPtr<IQSNet> m_spIQSNet;
 
 	// Generated message map functions
 	virtual BOOL OnInitDialog();

@@ -341,6 +341,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\OutputDebugFormat.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\OutputDebugMemoryStatus.cpp"
 				>
 			</File>
@@ -389,6 +393,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\VariantToBOOL.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\VariantToBSTR.cpp"
 				>
 			</File>
@@ -400,6 +408,10 @@
 			>
 			<File
 				RelativePath=".\InvokeMethod.h"
+				>
+			</File>
+			<File
+				RelativePath=".\OutputDebugFormat.h"
 				>
 			</File>
 			<File
@@ -416,6 +428,10 @@
 			</File>
 			<File
 				RelativePath=".\stdafx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\VariantToBOOL.h"
 				>
 			</File>
 			<File

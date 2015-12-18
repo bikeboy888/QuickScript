@@ -68,6 +68,8 @@ using namespace ATL;
 
 #include <altcecrt.h>
 #include <activscp.h>
+#include <wininet.h>
+#pragma comment(lib, "wininet.lib")
 
 #ifndef CHECKHR
 #define CHECKHR(stmt) \

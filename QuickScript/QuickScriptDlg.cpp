@@ -8,6 +8,7 @@
 #include "..\QSUtil\RegSvr.h"
 #include "..\QSUtil\OutputDebugMemoryStatus.h"
 #include "..\QSUtil\OutputDebugVariant.h"
+#include "..\QSUtil\OutputDebugFormat.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -136,6 +137,16 @@ void CQuickScriptDlg::OnBnClickedRun()
 		hr = m_spIQSScriptSite->put_ScriptEngine(CComBSTR(L"VBScript"));
 	}
 
+	//CComBSTR bstrURL(L"http://www.arcgis.com/sharing/rest?f=pjson");
+	//CComBSTR bstrURL(L"http://tviview.abc.net.au/iview/api2/?keyword=a-l");
+	CComBSTR bstrURL(L"http://www.arcgis.com/sharing/rest/info?f=pjson");
+	m_spIQSNet = NULL;
+	hr = m_spIQSNet.CoCreateInstance(CLSID_QSNet);
+	hr = m_spIQSNet->Open(CComBSTR("GET"), bstrURL, CComVariant(true));
+	hr = m_spIQSNet->Send(CComVariant());
+	//hr = spIQSNet->Close();
+	//spIQSNet = NULL;
+
 	/*
 	CComPtr<IQSJScript> spIQSJScript;
 	hr = spIQSJScript.CoCreateInstance(CLSID_QSJScript);
@@ -146,6 +157,7 @@ void CQuickScriptDlg::OnBnClickedRun()
 	if (!edtScript) return;
 	int nLen = edtScript->GetWindowTextLength();
 	CComBSTR bstrScript(nLen, (LPCOLESTR) NULL);
+	int nLen2 = bstrScript.Length();
 	edtScript->GetWindowText((BSTR) bstrScript, nLen + 1);
 
 	VARIANT varContext = { };
@@ -155,30 +167,10 @@ void CQuickScriptDlg::OnBnClickedRun()
 	//hr = m_spIQSScriptSite->ImportScript(CComBSTR(L"Function f(x)\r\n  f = x*x + 1\r\nEnd Function\r\n"), CComBSTR(L"VBScript"), CComVariant(bstrID));
 	hr = m_spIQSScriptSite->Execute(bstrScript, varContext);
 
-
 	hr = m_spIQSScriptSite->InvokeMethod(CComBSTR(L"f"), CComVariant(5), CComVariant(), CComVariant(), &varResult);
 	OutputDebugString(L"Result: ");
 	OutputDebugVariant(varResult);
 	OutputDebugString(L"\r\n");
-//m_spIQSScriptSite->ParsePinni
-
-	/*
-	CComVariant varResultBSTR;
-	varResultBSTR.ChangeType(VT_BSTR, &varResult);
-	TCHAR szText[1024] = { };
-	_stprintf(szText, _T("Result: %s\r\n"), V_BSTR(&varResultBSTR));
-	OutputDebugString(szText);
-	*/
-	//MessageBox(szText, _T("Output"), MB_OK);
-
-	if (m_spIQSScriptSite)
-	{
-		hr = m_spIQSScriptSite->Close();
-		m_spIQSScriptSite = NULL;
-	}
-
-	//CoFreeUnusedLibrariesEx(0, 0);
-	//CoFreeUnusedLibrariesEx(0, 0);
 
 	OutputDebugMemoryStatus();
 	OutputDebugString(L"\r\n");
@@ -188,6 +180,11 @@ void CQuickScriptDlg::OnBnClickedCleanup()
 {
 	HRESULT hr = S_OK;
 
+	if (m_spIQSNet)
+	{
+		m_spIQSNet = NULL;
+	}
+
 	if (m_spIQSScriptSite)
 	{
 		hr = m_spIQSScriptSite->Close();
@@ -197,22 +194,6 @@ void CQuickScriptDlg::OnBnClickedCleanup()
 	CoFreeUnusedLibrariesEx(0, 0);
 	CoFreeUnusedLibrariesEx(0, 0);
 
-	TCHAR szText[1024] = { };
-	MEMORYSTATUS MS = { };
-	::GlobalMemoryStatus(&MS);
-	/*
-	DWORD  dwLength;
-  DWORD  dwMemoryLoad;
-  SIZE_T dwTotalPhys;
-  SIZE_T dwAvailPhys;
-  SIZE_T dwTotalPageFile;
-  SIZE_T dwAvailPageFile;
-  SIZE_T dwTotalVirtual;
-  SIZE_T dwAvailVirtual;
-  */
-	_stprintf(szText, _T("Phys=%d/%d Virt=%d/%d\r\n"),
-		MS.dwAvailPhys, MS.dwTotalPhys,
-		MS.dwAvailVirtual, MS.dwTotalVirtual);
-	OutputDebugString(szText);
-	//_stprintf(szText, _T("Page = %d / %d\r\n"), MS.dwAvailPageFile, MS.dwTotalPageFile);
+	OutputDebugMemoryStatus();
+	OutputDebugString(L"\r\n");
 }

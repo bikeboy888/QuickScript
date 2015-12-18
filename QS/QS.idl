@@ -14,6 +14,7 @@ enum
 	METHID_Open,
 	METHID_Parse,
 	METHID_ReadAll,
+	METHID_Send,
 	METHID_SetObjKey,
 	METHID_Stringify
 
@@ -108,6 +109,9 @@ library QSLib
 		pointer_default(unique)
 	]
 	interface IQSNet : IDispatch{
+		[id(METHID_Close)] HRESULT Close();
+		[id(METHID_Open)] HRESULT Open([in] BSTR Method, [in] BSTR URL, [in, optional] VARIANT Async);
+		[id(METHID_Send)] HRESULT Send([in, optional] VARIANT Body);
 	};
 
 	//---------------------------------------------------------------------
