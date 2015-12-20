@@ -26,6 +26,27 @@ STDMETHODIMP CQSNet::InterfaceSupportsErrorInfo(REFIID riid)
 //
 //----------------------------------------------------------------------
 
+STDMETHODIMP CQSNet::get_OpenTimeout(LONG* pnOpenTimeout)
+{
+	if (!pnOpenTimeout) return E_INVALIDARG;
+	*pnOpenTimeout = m_nOpenTimeout;
+	return S_OK;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSNet::put_OpenTimeout(LONG nOpenTimeout)
+{
+	m_nOpenTimeout = nOpenTimeout;
+	return S_OK;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
 STDMETHODIMP CQSNet::get_Status(LONG* pnStatus)
 {
 	HRESULT hr = S_OK;
@@ -429,7 +450,7 @@ STDMETHODIMP CQSNet::Open(BSTR bstrMethod, BSTR bstrURL, VARIANT varAsync)
 		CHECKHR(DoInternetOpen());
 		CHECKHR(DoInternetConnect());
 		DWORD dwTick = GetTickCount();
-		DWORD dwWait = WaitForSingleObject(m_hOpenEvent, 10000);
+		DWORD dwWait = WaitForSingleObject(m_hOpenEvent, m_nOpenTimeout >= 0 ? (DWORD) m_nOpenTimeout : INFINITE);
 		if (dwWait != WAIT_OBJECT_0)
 		{
 #ifdef _DEBUG

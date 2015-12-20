@@ -148,6 +148,13 @@ void CQuickScriptDlg::OnBnClickedRun()
 	LONG nStatus = 0;
 	hr = m_spIQSNet->get_Status(&nStatus);
 	OutputDebugFormat(L"Status = %d\r\n", nStatus);
+	LONG nOpenTimeout = 0;
+	hr = m_spIQSNet->get_OpenTimeout(&nOpenTimeout);
+	OutputDebugFormat(L"OpenTimeout = %d\r\n", nOpenTimeout);
+	nOpenTimeout = 5000;
+	hr = m_spIQSNet->put_OpenTimeout(nOpenTimeout);
+	hr = m_spIQSNet->get_OpenTimeout(&nOpenTimeout);
+	OutputDebugFormat(L"OpenTimeout = %d\r\n", nOpenTimeout);
 
 	//hr = spIQSNet->Close();
 	//spIQSNet = NULL;

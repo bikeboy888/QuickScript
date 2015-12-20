@@ -38,6 +38,7 @@ public:
 		m_hConnect(NULL),
 		m_hRequest(NULL),
 		m_hOpenEvent(NULL),
+		m_nOpenTimeout(10000),
 		m_state(stateUnknown)
 	{
 		ZeroMemory(&m_URLComponents, sizeof(m_URLComponents));
@@ -104,6 +105,7 @@ protected:
 	HINTERNET m_hConnect;
 	HINTERNET m_hRequest;
 	HANDLE m_hOpenEvent;
+	LONG m_nOpenTimeout;
 	enum State m_state;
 
 	STDMETHOD(DoInternetOpen)();
@@ -117,6 +119,8 @@ protected:
 	void InternetStatusCallback(HINTERNET, DWORD, LPVOID, DWORD);
 
 public:
+	STDMETHOD(get_OpenTimeout)(LONG* pnOpenTimeout);
+	STDMETHOD(put_OpenTimeout)(LONG nOpenTimeout);
 	STDMETHOD(get_Status)(LONG* pnStatus);
 	STDMETHOD(Close)();
 	STDMETHOD(Open)(BSTR bstrMethod, BSTR bstrURL, VARIANT varAsync);
