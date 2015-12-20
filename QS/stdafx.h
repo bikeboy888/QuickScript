@@ -35,6 +35,7 @@
 
 #include <atlbase.h>
 #include <atlcom.h>
+#include <atlsafe.h>
 #include <atlctl.h>
 
 
@@ -67,6 +68,7 @@ using namespace ATL;
 #endif
 
 #include <altcecrt.h>
+
 #include <activscp.h>
 #include <wininet.h>
 #pragma comment(lib, "wininet.lib")

@@ -155,6 +155,9 @@ void CQuickScriptDlg::OnBnClickedRun()
 	hr = m_spIQSNet->put_OpenTimeout(nOpenTimeout);
 	hr = m_spIQSNet->get_OpenTimeout(&nOpenTimeout);
 	OutputDebugFormat(L"OpenTimeout = %d\r\n", nOpenTimeout);
+	CComBSTR bstrText;
+	m_spIQSNet->get_ResponseText(&bstrText);
+	OutputDebugFormat(L"Text = %s\r\n", (BSTR) bstrText);
 
 	//hr = spIQSNet->Close();
 	//spIQSNet = NULL;

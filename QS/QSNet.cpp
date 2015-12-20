@@ -47,6 +47,33 @@ STDMETHODIMP CQSNet::put_OpenTimeout(LONG nOpenTimeout)
 //
 //----------------------------------------------------------------------
 
+STDMETHODIMP CQSNet::get_ResponseText(BSTR* pbstrText)
+{
+	HRESULT hr = S_OK;
+	if (!pbstrText) return E_INVALIDARG;
+	*pbstrText = NULL;
+
+	int nLenA = m_ResponseBody.GetCount() + 1;
+	CHECKHR(m_ResponseBody.Resize(nLenA + 1));
+
+	int nLenW = MultiByteToWideChar(CP_UTF8, 0, (LPCSTR) &m_ResponseBody[0], nLenA, NULL, NULL);
+	*pbstrText = SysAllocStringLen(NULL, nLenW - 1);
+	if (*pbstrText == NULL)
+	{
+		m_ResponseBody.Resize(nLenA - 1);
+		return E_OUTOFMEMORY;
+	}
+
+	MultiByteToWideChar(CP_UTF8, 0, (LPCSTR) &m_ResponseBody[0], m_ResponseBody.GetCount(), *pbstrText, nLenW);
+	CHECKHR(m_ResponseBody.Resize(nLenA - 1));
+
+	return S_OK;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
 STDMETHODIMP CQSNet::get_Status(LONG* pnStatus)
 {
 	HRESULT hr = S_OK;
@@ -399,8 +426,11 @@ STDMETHODIMP CQSNet::DoInternetReadFile()
 #endif
 			if (dwRead == 0)
 			{
+				BYTE* pBytes = (BYTE*) &m_ResponseBody.GetAt(0);
 				return S_OK;
 			}
+
+			OnContentDownload(pData, dwRead);
 		}
 	}
 	dwLastError = GetLastError();
@@ -408,6 +438,26 @@ STDMETHODIMP CQSNet::DoInternetReadFile()
 	{
 		OutputDebugFormat(L"InternetReadFile -> FALSE (GetLastError:%d)\r\n", dwLastError);
 	}
+
+	return S_OK;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSNet::OnContentDownload(BYTE* pContent, LONG nContent)
+{
+	HRESULT hr = S_OK;
+
+	if (nContent <= 0)
+	{
+		return S_OK;
+	}
+
+	ULONG dwCount = m_ResponseBody.GetCount();
+	m_ResponseBody.Resize(dwCount + nContent);
+	memcpy(&m_ResponseBody[(LONG) dwCount], pContent, nContent);
 
 	return S_OK;
 }
@@ -442,7 +492,7 @@ STDMETHODIMP CQSNet::Open(BSTR bstrMethod, BSTR bstrURL, VARIANT varAsync)
 	m_bstrMethod = bstrMethod;
 	m_bstrURL = bstrURL;
 	CHECKHR(VariantToBOOL(varAsync, &m_bAsync, VARIANT_TRUE));
-	//CHECKHR(m_arrResponse.Resize((ULONG) 0));
+	//CHECKHR(m_ResponseBody.Resize((ULONG) 0));
 
 	if (m_bAsync == VARIANT_TRUE)
 	{

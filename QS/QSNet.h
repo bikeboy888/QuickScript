@@ -48,6 +48,7 @@ public:
 		ZeroMemory(&m_szPassword, sizeof(m_szPassword));
 		ZeroMemory(&m_szUrlPath, sizeof(m_szUrlPath));
 		ZeroMemory(&m_szExtraInfo, sizeof(m_szExtraInfo));
+		m_ResponseBody.Create((ULONG) 0);
 	}
 
 #ifndef _CE_DCOM
@@ -107,12 +108,14 @@ protected:
 	HANDLE m_hOpenEvent;
 	LONG m_nOpenTimeout;
 	enum State m_state;
+	CComSafeArray<BYTE> m_ResponseBody;
 
 	STDMETHOD(DoInternetOpen)();
 	STDMETHOD(DoInternetConnect)();
 	STDMETHOD(DoHttpOpenRequest)();
 	STDMETHOD(DoHttpSendRequest)();
 	STDMETHOD(DoInternetReadFile)();
+	STDMETHOD(OnContentDownload)(BYTE* pContent, LONG nContent);
 
 protected:
 	static void CALLBACK InternetStatusCallback(HINTERNET, DWORD_PTR, DWORD, LPVOID, DWORD);
@@ -121,6 +124,7 @@ protected:
 public:
 	STDMETHOD(get_OpenTimeout)(LONG* pnOpenTimeout);
 	STDMETHOD(put_OpenTimeout)(LONG nOpenTimeout);
+	STDMETHOD(get_ResponseText)(BSTR* pbstrText);
 	STDMETHOD(get_Status)(LONG* pnStatus);
 	STDMETHOD(Close)();
 	STDMETHOD(Open)(BSTR bstrMethod, BSTR bstrURL, VARIANT varAsync);

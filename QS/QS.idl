@@ -4,6 +4,7 @@
 enum
 {
 	PROPID_OpenTimeout,
+	PROPID_ResponseText,
 	PROPID_ScriptEngine,
 	PROPID_Status,
 
@@ -113,6 +114,7 @@ library QSLib
 	interface IQSNet : IDispatch{
 		[id(PROPID_OpenTimeout), propget] HRESULT OpenTimeout([out, retval] LONG* OpenTimeout);
 		[id(PROPID_OpenTimeout), propput] HRESULT OpenTimeout([in] LONG OpenTimeout);
+		[id(PROPID_ResponseText), propget] HRESULT ResponseText([out, retval] BSTR* ResponseText);
 		[id(PROPID_Status), propget] HRESULT Status([out, retval] LONG* Status);
 		[id(METHID_Close)] HRESULT Close();
 		[id(METHID_Open)] HRESULT Open([in] BSTR Method, [in] BSTR URL, [in, optional] VARIANT Async);
