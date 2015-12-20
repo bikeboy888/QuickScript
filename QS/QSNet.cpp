@@ -26,6 +26,36 @@ STDMETHODIMP CQSNet::InterfaceSupportsErrorInfo(REFIID riid)
 //
 //----------------------------------------------------------------------
 
+STDMETHODIMP CQSNet::get_Status(LONG* pnStatus)
+{
+	HRESULT hr = S_OK;
+	BOOL bOk = FALSE;
+	DWORD dwLastError = ERROR_SUCCESS;
+	if (!pnStatus) return E_INVALIDARG;
+	*pnStatus = 0;
+	if (!m_hRequest) return S_FALSE;
+
+	WORD statusCode = 0;
+	DWORD length = sizeof(DWORD);
+	bOk = HttpQueryInfo(
+		m_hRequest,
+		HTTP_QUERY_STATUS_CODE | HTTP_QUERY_FLAG_NUMBER,
+		&statusCode,
+		&length,
+		NULL);
+	if (bOk != TRUE)
+	{
+		dwLastError = GetLastError();
+		return S_OK;
+	}
+	*pnStatus = statusCode;
+	return S_OK;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
 STDMETHODIMP CQSNet::Close()
 {
 	HRESULT hr = S_OK;
@@ -348,7 +378,6 @@ STDMETHODIMP CQSNet::DoInternetReadFile()
 #endif
 			if (dwRead == 0)
 			{
-				CHECKHR(Close());
 				return S_OK;
 			}
 		}

@@ -4,6 +4,7 @@
 enum
 {
 	PROPID_ScriptEngine,
+	PROPID_Status,
 
 	METHID_Close,
 	METHID_EncodeURIComponent,
@@ -109,6 +110,7 @@ library QSLib
 		pointer_default(unique)
 	]
 	interface IQSNet : IDispatch{
+		[id(PROPID_Status), propget] HRESULT Status([out, retval] LONG* Status);
 		[id(METHID_Close)] HRESULT Close();
 		[id(METHID_Open)] HRESULT Open([in] BSTR Method, [in] BSTR URL, [in, optional] VARIANT Async);
 		[id(METHID_Send)] HRESULT Send([in, optional] VARIANT Body);

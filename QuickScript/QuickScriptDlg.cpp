@@ -142,9 +142,13 @@ void CQuickScriptDlg::OnBnClickedRun()
 	CComBSTR bstrURL(L"http://www.arcgis.com/sharing/rest/info?f=pjson");
 	m_spIQSNet = NULL;
 	hr = m_spIQSNet.CoCreateInstance(CLSID_QSNet);
-	hr = m_spIQSNet->Open(CComBSTR("GET"), bstrURL, CComVariant(true));
-	//hr = m_spIQSNet->Open(CComBSTR("GET"), bstrURL, CComVariant(false));
+	//hr = m_spIQSNet->Open(CComBSTR("GET"), bstrURL, CComVariant(true));
+	hr = m_spIQSNet->Open(CComBSTR("GET"), bstrURL, CComVariant(false));
 	hr = m_spIQSNet->Send(CComVariant());
+	LONG nStatus = 0;
+	hr = m_spIQSNet->get_Status(&nStatus);
+	OutputDebugFormat(L"Status = %d\r\n", nStatus);
+
 	//hr = spIQSNet->Close();
 	//spIQSNet = NULL;
 

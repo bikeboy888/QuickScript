@@ -117,6 +117,7 @@ protected:
 	void InternetStatusCallback(HINTERNET, DWORD, LPVOID, DWORD);
 
 public:
+	STDMETHOD(get_Status)(LONG* pnStatus);
 	STDMETHOD(Close)();
 	STDMETHOD(Open)(BSTR bstrMethod, BSTR bstrURL, VARIANT varAsync);
 	STDMETHOD(Send)(VARIANT varBody);
