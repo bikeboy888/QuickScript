@@ -109,6 +109,8 @@ protected:
 	LONG m_nOpenTimeout;
 	enum State m_state;
 	CComSafeArray<BYTE> m_ResponseBody;
+	CComBSTR m_bstrResponsePath;
+	CComPtr<IQSFile> m_ResponseFile;
 
 	STDMETHOD(DoInternetOpen)();
 	STDMETHOD(DoInternetConnect)();
@@ -124,6 +126,8 @@ protected:
 public:
 	STDMETHOD(get_OpenTimeout)(LONG* pnOpenTimeout);
 	STDMETHOD(put_OpenTimeout)(LONG nOpenTimeout);
+	STDMETHOD(get_ResponsePath)(BSTR* pbstrPath);
+	STDMETHOD(put_ResponsePath)(BSTR bstrPath);
 	STDMETHOD(get_ResponseText)(BSTR* pbstrText);
 	STDMETHOD(get_Status)(LONG* pnStatus);
 	STDMETHOD(Close)();

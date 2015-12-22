@@ -28,6 +28,15 @@ STDMETHODIMP CQSFile::InterfaceSupportsErrorInfo(REFIID riid)
 //
 //----------------------------------------------------------------------
 
+STDMETHODIMP CQSFile::Clone(IStream **ppstm)
+{
+	return E_NOTIMPL;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
 STDMETHODIMP CQSFile::Close()
 {
 	HRESULT hr = S_OK;
@@ -51,7 +60,25 @@ STDMETHODIMP CQSFile::Close()
 //
 //----------------------------------------------------------------------
 
-STDMETHODIMP CQSFile::Open(BSTR bstrPath, VARIANT_BOOL* pbOk)
+STDMETHODIMP CQSFile::Commit(DWORD grfCommitFlags)
+{
+	return E_NOTIMPL;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSFile::CopyTo(IStream *pstm, ULARGE_INTEGER cb, ULARGE_INTEGER *pcbRead, ULARGE_INTEGER *pcbWritten)
+{
+	return E_NOTIMPL;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSFile::Open(BSTR bstrPath, LONG nDesiredAccess, LONG nShareMode, LONG nCreationDisposition, VARIANT_BOOL* pbOk)
 {
 	HRESULT hr = S_OK;
 
@@ -65,10 +92,10 @@ STDMETHODIMP CQSFile::Open(BSTR bstrPath, VARIANT_BOOL* pbOk)
 
 	m_hFile = CreateFile(
 		bstrPath,
-		GENERIC_READ,
-		FILE_SHARE_READ | FILE_SHARE_WRITE,
+		(DWORD) nDesiredAccess,
+		(DWORD) nShareMode,
 		NULL,
-		OPEN_EXISTING,
+		(DWORD) nCreationDisposition,
 		FILE_ATTRIBUTE_NORMAL,
 		NULL);
 
@@ -79,6 +106,30 @@ STDMETHODIMP CQSFile::Open(BSTR bstrPath, VARIANT_BOOL* pbOk)
 	}
 
 	return S_FALSE;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSFile::Read(void *pv, ULONG cb, ULONG *pcbRead)
+{
+	HRESULT hr = S_OK;
+	BOOL bOk = TRUE;
+	DWORD dwRead = 0;
+	if (pcbRead) *pcbRead = 0;
+	if (m_hFile == INVALID_HANDLE_VALUE) return S_FALSE;
+	bOk = ReadFile(m_hFile, pv, cb, &dwRead, NULL);
+	if (bOk != TRUE)
+	{
+		return S_FALSE;
+	}
+	if (pcbRead) *pcbRead = dwRead;
+	if (dwRead < cb)
+	{
+		return S_FALSE;
+	}
+	return S_OK;
 }
 
 //----------------------------------------------------------------------
@@ -118,6 +169,100 @@ STDMETHODIMP CQSFile::ReadAll(BSTR* pbstrText)
 	BSTR pDataW = SysAllocStringLen(NULL, nLenW);
 	MultiByteToWideChar(CodePage, 0, (LPCSTR) (BYTE*) pDataA, nLenA, pDataW, nLenW);
 	*pbstrText = pDataW;
+	return S_OK;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSFile::Seek(LARGE_INTEGER dlibMove, DWORD dwOrigin, ULARGE_INTEGER *plibNewPosition)
+{
+	HRESULT hr = S_OK;
+	DWORD dwLastError = 0;
+	DWORD dwMethod = 0;
+	DWORD dwPos = 0;
+	if (m_hFile == INVALID_HANDLE_VALUE) return S_FALSE;
+	switch (dwOrigin)
+	{
+	case STREAM_SEEK_CUR:
+		dwMethod = FILE_CURRENT;
+		break;
+	case STREAM_SEEK_END:
+		dwMethod = FILE_END;
+		break;
+	case STREAM_SEEK_SET:
+		dwMethod = FILE_BEGIN;
+		break;
+	default:
+		return E_INVALIDARG;
+	}
+	dwPos = SetFilePointer(m_hFile, dlibMove.LowPart, &dlibMove.HighPart, dwMethod);
+	if (dwPos == INVALID_SET_FILE_POINTER)
+	{
+		dwLastError = GetLastError();
+		if (dwLastError != ERROR_SUCCESS)
+		{
+			return S_FALSE;
+		}
+	}
+	plibNewPosition->LowPart = dwPos;
+	plibNewPosition->HighPart = dlibMove.HighPart;
+	return S_OK;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSFile::SetSize(ULARGE_INTEGER libNewSize)
+{
+	return E_NOTIMPL;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSFile::Stat(STATSTG *pstatstg, DWORD grfStatFlag)
+{
+	HRESULT hr = S_OK;
+	DWORD dwLastError = ERROR_SUCCESS;
+	if (!pstatstg) return E_INVALIDARG;
+	ZeroMemory(pstatstg, sizeof(STATSTG));
+	pstatstg->cbSize.LowPart = GetFileSize(m_hFile, &pstatstg->cbSize.HighPart);
+	if (pstatstg->cbSize.LowPart == INVALID_FILE_SIZE)
+	{
+		dwLastError = GetLastError();
+		if (dwLastError != NO_ERROR)
+		{
+			return S_FALSE;
+		}
+	}
+	return S_OK;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSFile::Write(const void *pv, ULONG cb, ULONG *pcbWritten)
+{
+	HRESULT hr = S_OK;
+	BOOL bOk = TRUE;
+	DWORD dwWritten = 0;
+	if (pcbWritten) *pcbWritten = 0;
+	if (m_hFile == INVALID_HANDLE_VALUE) return S_FALSE;
+	bOk = WriteFile(m_hFile, pv, cb, &dwWritten, NULL);
+	if (bOk != TRUE)
+	{
+		return S_FALSE;
+	}
+	if (pcbWritten) *pcbWritten = dwWritten;
+	if (dwWritten < cb)
+	{
+		return S_FALSE;
+	}
 	return S_OK;
 }
 

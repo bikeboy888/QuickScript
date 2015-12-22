@@ -2,6 +2,7 @@
 
 #include "stdafx.h"
 #include "QSNet.h"
+#include "QSFile.h"
 #include "..\QSUtil\OutputDebugFormat.h"
 #include "..\QSUtil\VariantToBOOL.h"
 
@@ -40,6 +41,27 @@ STDMETHODIMP CQSNet::get_OpenTimeout(LONG* pnOpenTimeout)
 STDMETHODIMP CQSNet::put_OpenTimeout(LONG nOpenTimeout)
 {
 	m_nOpenTimeout = nOpenTimeout;
+	return S_OK;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSNet::get_ResponsePath(BSTR* pbstrResponsePath)
+{
+	if (!pbstrResponsePath) return E_INVALIDARG;
+	*pbstrResponsePath = m_bstrResponsePath.Copy();
+	return S_OK;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSNet::put_ResponsePath(BSTR bstrResponsePath)
+{
+	m_bstrResponsePath = bstrResponsePath;
 	return S_OK;
 }
 
@@ -426,7 +448,11 @@ STDMETHODIMP CQSNet::DoInternetReadFile()
 #endif
 			if (dwRead == 0)
 			{
-				BYTE* pBytes = (BYTE*) &m_ResponseBody.GetAt(0);
+				if (m_ResponseFile)
+				{
+					CHECKHR(m_ResponseFile->Close());
+					m_ResponseFile = NULL;
+				}
 				return S_OK;
 			}
 
@@ -453,6 +479,29 @@ STDMETHODIMP CQSNet::OnContentDownload(BYTE* pContent, LONG nContent)
 	if (nContent <= 0)
 	{
 		return S_OK;
+	}
+
+	if (m_bstrResponsePath.Length() > 0)
+	{
+		if (m_ResponseFile == NULL)
+		{
+			CComPtr<IQSFile> spIQSFile;
+			VARIANT_BOOL bOk = VARIANT_TRUE;
+			CHECKHR(CQSFile::_CreatorClass::CreateInstance(NULL, IID_IQSFile, (void**) &spIQSFile));
+			CHECKHR(spIQSFile->Open(m_bstrResponsePath, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ, CREATE_ALWAYS, &bOk));
+			if (bOk != VARIANT_TRUE) return S_FALSE;
+			CHECKHR(spIQSFile->QueryInterface(IID_IQSFile, (void**) &m_ResponseFile));
+		}
+
+		CComPtr<IStream> spIStream;
+		CHECKHR(m_ResponseFile->QueryInterface(IID_IStream, (void**) &spIStream));
+		DWORD dwWritten = 0;
+		hr = spIStream->Write(pContent, nContent, &dwWritten);
+		if (FAILED(hr))
+		{
+			return hr;
+		}
+		return hr;
 	}
 
 	ULONG dwCount = m_ResponseBody.GetCount();

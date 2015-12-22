@@ -4,6 +4,7 @@
 enum
 {
 	PROPID_OpenTimeout,
+	PROPID_ResponsePath,
 	PROPID_ResponseText,
 	PROPID_ScriptEngine,
 	PROPID_Status,
@@ -74,7 +75,7 @@ library QSLib
 	]
 	interface IQSFile : IDispatch{
 		[id(METHID_Close)] HRESULT Close();
-		[id(METHID_Open)] HRESULT Open([in] BSTR Path, [out, retval] VARIANT_BOOL* Ok);
+		[id(METHID_Open)] HRESULT Open([in] BSTR Path, [in, defaultvalue(0x80000000L)] LONG DesiredAccess, [in, defaultvalue(1 | 2)] LONG ShareMode, [in, defaultvalue(3)] LONG CreationDisposition, [out, retval] VARIANT_BOOL* Ok);
 		[id(METHID_ReadAll)] HRESULT ReadAll([out, retval] BSTR* Text);
 	};
 
@@ -114,6 +115,8 @@ library QSLib
 	interface IQSNet : IDispatch{
 		[id(PROPID_OpenTimeout), propget] HRESULT OpenTimeout([out, retval] LONG* OpenTimeout);
 		[id(PROPID_OpenTimeout), propput] HRESULT OpenTimeout([in] LONG OpenTimeout);
+		[id(PROPID_ResponsePath), propget] HRESULT ResponsePath([out, retval] BSTR* ResponsePath);
+		[id(PROPID_ResponsePath), propput] HRESULT ResponsePath([in] BSTR ResponsePath);
 		[id(PROPID_ResponseText), propget] HRESULT ResponseText([out, retval] BSTR* ResponseText);
 		[id(PROPID_Status), propget] HRESULT Status([out, retval] LONG* Status);
 		[id(METHID_Close)] HRESULT Close();

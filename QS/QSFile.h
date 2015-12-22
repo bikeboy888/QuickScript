@@ -29,6 +29,7 @@ class ATL_NO_VTABLE CQSFile :
 	public CComObjectRootEx<CComSingleThreadModel>,
 	public CComCoClass<CQSFile, &CLSID_QSFile>,
 	public ISupportErrorInfo,
+	public IStream,
 	public IDispatchImpl<IQSFile, &IID_IQSFile, &LIBID_QSLib, /*wMajor =*/ 1, /*wMinor =*/ 0>
 {
 public:
@@ -45,6 +46,7 @@ BEGIN_COM_MAP(CQSFile)
 	COM_INTERFACE_ENTRY(IQSFile)
 	COM_INTERFACE_ENTRY(IDispatch)
 	COM_INTERFACE_ENTRY(ISupportErrorInfo)
+	COM_INTERFACE_ENTRY(IStream)
 END_COM_MAP()
 
 // ISupportsErrorInfo
@@ -64,7 +66,6 @@ END_COM_MAP()
 		{
 			Close();
 		}
-
 	}
 
 protected:
@@ -73,8 +74,23 @@ protected:
 
 public:
 	STDMETHOD(Close)();
-	STDMETHOD(Open)(BSTR bstrPath, VARIANT_BOOL* pbOk);
+	STDMETHOD(Open)(BSTR bstrPath, LONG nDesiredAccess, LONG nShareMode, LONG nCreationDisposition, VARIANT_BOOL* pbOk);
 	STDMETHOD(ReadAll)(BSTR* pbstrText);
+
+	// ISequentialStream
+	STDMETHOD(Read)(void *pv, ULONG cb, ULONG *pcbRead);
+	STDMETHOD(Write)(const void *pv, ULONG cb, ULONG *pcbWritten);
+
+	// IStream
+	STDMETHOD(Seek)(LARGE_INTEGER dlibMove, DWORD dwOrigin, ULARGE_INTEGER *plibNewPosition);
+	STDMETHOD(SetSize)(ULARGE_INTEGER libNewSize);
+	STDMETHOD(CopyTo)(IStream *pstm, ULARGE_INTEGER cb, ULARGE_INTEGER *pcbRead, ULARGE_INTEGER *pcbWritten);
+	STDMETHOD(Commit)(DWORD grfCommitFlags);
+	STDMETHOD(Revert)( void) { return E_NOTIMPL; }
+	STDMETHOD(LockRegion)(ULARGE_INTEGER libOffset, ULARGE_INTEGER cb, DWORD dwLockType) { return E_NOTIMPL; }
+	STDMETHOD(UnlockRegion)(ULARGE_INTEGER libOffset, ULARGE_INTEGER cb, DWORD dwLockType) { return E_NOTIMPL; }
+	STDMETHOD(Stat)(STATSTG *pstatstg, DWORD grfStatFlag);
+	STDMETHOD(Clone)(IStream **ppstm);
 
 };
 
