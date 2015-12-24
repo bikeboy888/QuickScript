@@ -4,6 +4,8 @@
 enum
 {
 	PROPID_OpenTimeout,
+	PROPID_OnReadyStateChange,
+	PROPID_ReadyState,
 	PROPID_ResponsePath,
 	PROPID_ResponseText,
 	PROPID_ScriptEngine,
@@ -113,8 +115,11 @@ library QSLib
 		pointer_default(unique)
 	]
 	interface IQSNet : IDispatch{
+		[id(PROPID_OnReadyStateChange), propget] HRESULT OnReadyStateChange([out, retval] IDispatch** OnReadyStateChange);
+		[id(PROPID_OnReadyStateChange), propputref] HRESULT OnReadyStateChange([in] IDispatch* OnReadyStateChange);
 		[id(PROPID_OpenTimeout), propget] HRESULT OpenTimeout([out, retval] LONG* OpenTimeout);
 		[id(PROPID_OpenTimeout), propput] HRESULT OpenTimeout([in] LONG OpenTimeout);
+		[id(PROPID_ReadyState), propget] HRESULT ReadyState([out, retval] LONG* ReadyState);
 		[id(PROPID_ResponsePath), propget] HRESULT ResponsePath([out, retval] BSTR* ResponsePath);
 		[id(PROPID_ResponsePath), propput] HRESULT ResponsePath([in] BSTR ResponsePath);
 		[id(PROPID_ResponseText), propget] HRESULT ResponseText([out, retval] BSTR* ResponseText);

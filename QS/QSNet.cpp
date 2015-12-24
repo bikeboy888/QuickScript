@@ -5,6 +5,7 @@
 #include "QSFile.h"
 #include "..\QSUtil\OutputDebugFormat.h"
 #include "..\QSUtil\VariantToBOOL.h"
+#include "..\QSUtil\InvokeMethod.h"
 
 // CQSNet
 
@@ -27,6 +28,54 @@ STDMETHODIMP CQSNet::InterfaceSupportsErrorInfo(REFIID riid)
 //
 //----------------------------------------------------------------------
 
+CQSNet::CQSNet() :
+	m_bAsync(VARIANT_FALSE),
+	m_hInternet(NULL),
+	m_hConnect(NULL),
+	m_hRequest(NULL),
+	m_hOpenEvent(NULL),
+	m_nOpenTimeout(10000),
+	m_state(stateUnknown),
+	m_nReadyState(0)
+{
+	ZeroMemory(&m_URLComponents, sizeof(m_URLComponents));
+	ZeroMemory(&m_szScheme, sizeof(m_szScheme));
+	ZeroMemory(&m_szHostName, sizeof(m_szHostName));
+	ZeroMemory(&m_szUserName, sizeof(m_szUserName));
+	ZeroMemory(&m_szPassword, sizeof(m_szPassword));
+	ZeroMemory(&m_szUrlPath, sizeof(m_szUrlPath));
+	ZeroMemory(&m_szExtraInfo, sizeof(m_szExtraInfo));
+	m_ResponseBody.Create((ULONG) 0);
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSNet::get_OnReadyStateChange(IDispatch** ppIDispatch)
+{
+	HRESULT hr = S_OK;
+	if (!ppIDispatch) return E_INVALIDARG;
+	*ppIDispatch = NULL;
+	if (!m_OnReadyStateChange) return S_OK;
+	CHECKHR(m_OnReadyStateChange->QueryInterface(IID_IDispatch, (void**) ppIDispatch));
+	return hr;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSNet::putref_OnReadyStateChange(IDispatch* pIDispatch)
+{
+	m_OnReadyStateChange = pIDispatch;
+	return S_OK;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
 STDMETHODIMP CQSNet::get_OpenTimeout(LONG* pnOpenTimeout)
 {
 	if (!pnOpenTimeout) return E_INVALIDARG;
@@ -41,6 +90,38 @@ STDMETHODIMP CQSNet::get_OpenTimeout(LONG* pnOpenTimeout)
 STDMETHODIMP CQSNet::put_OpenTimeout(LONG nOpenTimeout)
 {
 	m_nOpenTimeout = nOpenTimeout;
+	return S_OK;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSNet::get_ReadyState(LONG* pnReadyState)
+{
+	if (!pnReadyState) return E_INVALIDARG;
+	*pnReadyState = m_nReadyState;
+	return S_OK;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSNet::put_ReadyState(LONG nReadyState)
+{
+	HRESULT hr = S_OK;
+
+	if (m_nReadyState == nReadyState)
+	{
+		return S_OK;
+	}
+
+	m_nReadyState = nReadyState;
+#ifdef _DEBUG
+	OutputDebugFormat(L"ReadyState %d\r\n", nReadyState);
+#endif
+	CHECKHR(OnReadyStateChange());
 	return S_OK;
 }
 
@@ -407,6 +488,7 @@ STDMETHODIMP CQSNet::DoHttpSendRequest()
 
 	m_state = stateHttpSendRequest;
 	bOk = HttpSendRequest(m_hRequest, NULL, 0, pData, nData);
+	CHECKHR(put_ReadyState(2));
 	if (bOk != TRUE)
 	{
 		dwLastError = GetLastError();
@@ -453,6 +535,7 @@ STDMETHODIMP CQSNet::DoInternetReadFile()
 					CHECKHR(m_ResponseFile->Close());
 					m_ResponseFile = NULL;
 				}
+				CHECKHR(put_ReadyState(4));
 				return S_OK;
 			}
 
@@ -515,6 +598,19 @@ STDMETHODIMP CQSNet::OnContentDownload(BYTE* pContent, LONG nContent)
 //
 //----------------------------------------------------------------------
 
+STDMETHODIMP CQSNet::OnReadyStateChange()
+{
+	HRESULT hr = S_OK;
+	if (!m_OnReadyStateChange) return S_OK;
+	CComVariant varResult;
+	CHECKHR(InvokeMethod(m_OnReadyStateChange, NULL, CComVariant(), CComVariant(), CComVariant(), &varResult));
+	return hr;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
 STDMETHODIMP CQSNet::Open(BSTR bstrMethod, BSTR bstrURL, VARIANT varAsync)
 {
 	HRESULT hr = S_OK;
@@ -569,6 +665,7 @@ STDMETHODIMP CQSNet::Open(BSTR bstrMethod, BSTR bstrURL, VARIANT varAsync)
 		else
 		{
 			m_hOpenEvent = NULL;
+			CHECKHR(put_ReadyState(1));
 		}
 	}
 	else
@@ -576,6 +673,7 @@ STDMETHODIMP CQSNet::Open(BSTR bstrMethod, BSTR bstrURL, VARIANT varAsync)
 		CHECKHR(DoInternetOpen());
 		CHECKHR(DoInternetConnect());
 		CHECKHR(DoHttpOpenRequest());
+		CHECKHR(put_ReadyState(1));
 	}
 
 	return S_OK;
@@ -591,6 +689,7 @@ STDMETHODIMP CQSNet::Send(VARIANT varBody)
 	CHECKHR(DoHttpSendRequest());
 	if (m_bAsync != VARIANT_TRUE)
 	{
+		CHECKHR(put_ReadyState(3));
 		CHECKHR(DoInternetReadFile());
 	}
 	return S_OK;
@@ -650,6 +749,7 @@ void CQSNet::InternetStatusCallback(
 		{
 		case stateHttpSendRequest:
 			//OnHttpSendRequestComplete(lpvStatusInformation);
+			put_ReadyState(3);
 			DoInternetReadFile();
 			break;
 

@@ -49,7 +49,15 @@ BOOL CQuickScriptDlg::OnInitDialog()
 	CEdit* edtScript = (CEdit*) GetDlgItem(EDT_SCRIPT);
 	if (edtScript)
 	{
-		edtScript->SetWindowText(L"Function f(x)\r\n  f = x + 2\r\nEnd Function\r\n");
+		edtScript->SetWindowText(
+			L"Function f(x)\r\n"
+			L"  Dim net\r\n"
+			L"  Set net = CreateObject(\"QS.Net\")\r\n"
+			L"  net.Open \"GET\", \"http://www.arcgis.com/sharing/rest?f=json\", False\r\n"
+			L"  net.Send\r\n"
+			L"  f = x + 2\r\n"
+			L"End Function\r\n"
+			);
 	}
 
 	// TODO: Add extra initialization here
@@ -141,6 +149,7 @@ void CQuickScriptDlg::OnBnClickedRun()
 	//CComBSTR bstrURL(L"http://tviview.abc.net.au/iview/api2/?keyword=a-l");
 	CComBSTR bstrURL(L"http://www.arcgis.com/sharing/rest/info?f=pjson");
 	m_spIQSNet = NULL;
+	/*
 	hr = m_spIQSNet.CoCreateInstance(CLSID_QSNet);
 	//hr = m_spIQSNet->Open(CComBSTR("GET"), bstrURL, CComVariant(true));
 	hr = m_spIQSNet->put_ResponsePath(CComBSTR(L"\\My Documents\\Output.txt"));
@@ -159,6 +168,7 @@ void CQuickScriptDlg::OnBnClickedRun()
 	CComBSTR bstrText;
 	m_spIQSNet->get_ResponseText(&bstrText);
 	OutputDebugFormat(L"Text = %s\r\n", (BSTR) bstrText);
+	*/
 
 	//hr = spIQSNet->Close();
 	//spIQSNet = NULL;

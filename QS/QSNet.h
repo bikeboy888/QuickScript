@@ -32,24 +32,7 @@ class ATL_NO_VTABLE CQSNet :
 	public IDispatchImpl<IQSNet, &IID_IQSNet, &LIBID_QSLib, /*wMajor =*/ 1, /*wMinor =*/ 0>
 {
 public:
-	CQSNet() :
-		m_bAsync(VARIANT_FALSE),
-		m_hInternet(NULL),
-		m_hConnect(NULL),
-		m_hRequest(NULL),
-		m_hOpenEvent(NULL),
-		m_nOpenTimeout(10000),
-		m_state(stateUnknown)
-	{
-		ZeroMemory(&m_URLComponents, sizeof(m_URLComponents));
-		ZeroMemory(&m_szScheme, sizeof(m_szScheme));
-		ZeroMemory(&m_szHostName, sizeof(m_szHostName));
-		ZeroMemory(&m_szUserName, sizeof(m_szUserName));
-		ZeroMemory(&m_szPassword, sizeof(m_szPassword));
-		ZeroMemory(&m_szUrlPath, sizeof(m_szUrlPath));
-		ZeroMemory(&m_szExtraInfo, sizeof(m_szExtraInfo));
-		m_ResponseBody.Create((ULONG) 0);
-	}
+	CQSNet();
 
 #ifndef _CE_DCOM
 DECLARE_REGISTRY_RESOURCEID(IDR_QSNET)
@@ -111,6 +94,8 @@ protected:
 	CComSafeArray<BYTE> m_ResponseBody;
 	CComBSTR m_bstrResponsePath;
 	CComPtr<IQSFile> m_ResponseFile;
+	CComPtr<IDispatch> m_OnReadyStateChange;
+	LONG m_nReadyState;
 
 	STDMETHOD(DoInternetOpen)();
 	STDMETHOD(DoInternetConnect)();
@@ -118,14 +103,19 @@ protected:
 	STDMETHOD(DoHttpSendRequest)();
 	STDMETHOD(DoInternetReadFile)();
 	STDMETHOD(OnContentDownload)(BYTE* pContent, LONG nContent);
+	STDMETHOD(OnReadyStateChange)();
 
 protected:
 	static void CALLBACK InternetStatusCallback(HINTERNET, DWORD_PTR, DWORD, LPVOID, DWORD);
 	void InternetStatusCallback(HINTERNET, DWORD, LPVOID, DWORD);
 
 public:
+	STDMETHOD(get_OnReadyStateChange)(IDispatch** ppIDispatch);
+	STDMETHOD(putref_OnReadyStateChange)(IDispatch* pIDispatch);
 	STDMETHOD(get_OpenTimeout)(LONG* pnOpenTimeout);
 	STDMETHOD(put_OpenTimeout)(LONG nOpenTimeout);
+	STDMETHOD(get_ReadyState)(LONG* pnReadyState);
+	STDMETHOD(put_ReadyState)(LONG nReadyState);
 	STDMETHOD(get_ResponsePath)(BSTR* pbstrPath);
 	STDMETHOD(put_ResponsePath)(BSTR bstrPath);
 	STDMETHOD(get_ResponseText)(BSTR* pbstrText);
