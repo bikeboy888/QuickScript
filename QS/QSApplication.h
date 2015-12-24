@@ -62,7 +62,12 @@ END_COM_MAP()
 	{
 	}
 
+protected:
+	CAtlMap< CComBSTR, CComVariant, CElementTraits<CComBSTR>> m_UserProperties;
+
 public:
+	STDMETHOD(get_UserProperties)(BSTR bstrName, VARIANT* pvarValue);
+	STDMETHOD(put_UserProperties)(BSTR bstrName, VARIANT varValue);
 
 };
 

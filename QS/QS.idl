@@ -10,6 +10,7 @@ enum
 	PROPID_ResponseText,
 	PROPID_ScriptEngine,
 	PROPID_Status,
+	PROPID_UserProperties,
 
 	METHID_Close,
 	METHID_EncodeURIComponent,
@@ -61,6 +62,8 @@ library QSLib
 		pointer_default(unique)
 	]
 	interface IQSApplication : IDispatch{
+		[id(PROPID_UserProperties), propget] HRESULT UserProperties([in] BSTR Name, [out, retval] VARIANT* Value);
+		[id(PROPID_UserProperties), propput] HRESULT UserProperties([in] BSTR Name, [in] VARIANT Value);
 	};
 
 	//----------------------------------------------------------------------

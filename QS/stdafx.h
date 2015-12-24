@@ -37,7 +37,7 @@
 #include <atlcom.h>
 #include <atlsafe.h>
 #include <atlctl.h>
-
+#include <atlcoll.h>
 
 #if defined(WIN32_PLATFORM_PSPC) || defined(WIN32_PLATFORM_WFSP)
 #ifndef _DEVICE_RESOLUTION_AWARE

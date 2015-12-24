@@ -133,15 +133,24 @@ void CQuickScriptDlg::OnBnClickedRun()
 {
 	HRESULT hr = S_OK;
 
+	if (!m_spIQSApplication)
+	{
+		hr = m_spIQSApplication.CoCreateInstance(CLSID_QSApplication);
+		if (FAILED(hr))
+		{
+			RegSvr(L"QS.dll");
+			hr = m_spIQSApplication.CoCreateInstance(CLSID_QSApplication);
+		}
+	}
+
+	hr = m_spIQSApplication->put_UserProperties(CComBSTR(L"pi"), CComVariant(3.1415));
+	CComVariant pi;
+	hr = m_spIQSApplication->get_UserProperties(CComBSTR(L"pi"), &pi);
+
 	if (!m_spIQSScriptSite)
 	{
 		//hr = E_FAIL;
 		hr = m_spIQSScriptSite.CoCreateInstance(CLSID_QSScriptSite);
-		if (FAILED(hr))
-		{
-			RegSvr(L"QS.dll");
-			hr = m_spIQSScriptSite.CoCreateInstance(CLSID_QSScriptSite);
-		}
 		hr = m_spIQSScriptSite->put_ScriptEngine(CComBSTR(L"VBScript"));
 	}
 
@@ -205,6 +214,11 @@ void CQuickScriptDlg::OnBnClickedRun()
 void CQuickScriptDlg::OnBnClickedCleanup()
 {
 	HRESULT hr = S_OK;
+
+	if (m_spIQSApplication)
+	{
+		m_spIQSApplication = NULL;
+	}
 
 	if (m_spIQSNet)
 	{

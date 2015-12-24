@@ -36,4 +36,5 @@ public:
 public:
     LONG m_cRefCount;
     HWND m_hWnd;
+
 };

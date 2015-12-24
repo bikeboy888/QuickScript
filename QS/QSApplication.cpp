@@ -20,3 +20,35 @@ STDMETHODIMP CQSApplication::InterfaceSupportsErrorInfo(REFIID riid)
 	}
 	return S_FALSE;
 }
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSApplication::get_UserProperties(BSTR bstrName, VARIANT* pvarValue)
+{
+	HRESULT hr = S_OK;
+	if (!pvarValue) return E_INVALIDARG;
+	VariantInit(pvarValue);
+	CComVariant varValue;
+	if (!m_UserProperties.Lookup(bstrName, varValue))
+	{
+		return S_FALSE;
+	}
+	CHECKHR(varValue.Detach(pvarValue));
+	return hr;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSApplication::put_UserProperties(BSTR bstrName, VARIANT varValue)
+{
+	POSITION pos = m_UserProperties.SetAt(bstrName, varValue);
+	return S_OK;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------

@@ -22,6 +22,7 @@ public:
 // Implementation
 protected:
 	HICON m_hIcon;
+	CComPtr<IQSApplication> m_spIQSApplication;
 	CComPtr<IQSScriptSite> m_spIQSScriptSite;
 	CComPtr<IQSNet> m_spIQSNet;
 
