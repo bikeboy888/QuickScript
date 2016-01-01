@@ -3,6 +3,7 @@
 #include "stdafx.h"
 #include "QSScriptSite.h"
 #include "..\QSUtil\InvokeMethod.h"
+#include "QSGlobal.h"
 
 // CQSScriptSite
 
@@ -29,11 +30,48 @@ STDMETHODIMP CQSScriptSite::InterfaceSupportsErrorInfo(REFIID riid)
 //
 //----------------------------------------------------------------------
 
+STDMETHODIMP CQSScriptSite::get_hWnd(OLE_HANDLE* phWnd)
+{
+	HRESULT hr = S_OK;
+	if (!phWnd) return E_INVALIDARG;
+	if (!m_pScriptSite) return E_POINTER;
+	HWND hWnd = 0;
+	CHECKHR(m_pScriptSite->GetWindow(&hWnd));
+	*phWnd = (OLE_HANDLE) hWnd;
+	return S_OK;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSScriptSite::put_hWnd(OLE_HANDLE hWnd)
+{
+	HRESULT hr = S_OK;
+	if (!m_pScriptSite) return E_POINTER;
+	CHECKHR(m_pScriptSite->SetWindow((HWND) hWnd));
+	if (m_spIQSGlobal)
+	{
+		CComPtr<IPropertyBag> spIPropertyBag;
+		hr = m_spIQSGlobal->QueryInterface(IID_IPropertyBag, (void**) &spIPropertyBag);
+		if (SUCCEEDED(hr) && spIPropertyBag)
+		{
+			CComVariant varhWnd((LONG) hWnd);
+			CHECKHR(spIPropertyBag->Write(OLESTR("hWnd"), &varhWnd));
+		}
+	}
+	return S_OK;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
 STDMETHODIMP CQSScriptSite::put_ScriptEngine(BSTR bstrScriptEngine)
 {
 	HRESULT hr = S_OK;
 
-	if (m_spIActiveScript || m_spIActiveScriptParse || m_pScriptSite)
+	if (m_spIActiveScript || m_spIActiveScriptParse || m_pScriptSite || m_spIQSGlobal)
 	{
 		CHECKHR(Close());
 	}
@@ -44,6 +82,13 @@ STDMETHODIMP CQSScriptSite::put_ScriptEngine(BSTR bstrScriptEngine)
     CHECKHR(m_spIActiveScript->QueryInterface(IID_IActiveScriptParse, (void**) &m_spIActiveScriptParse));
     CHECKHR(m_spIActiveScriptParse->InitNew());
     CHECKHR(m_spIActiveScript->SetScriptState(SCRIPTSTATE_CONNECTED));
+
+	CComObject<CQSGlobal>* pQSGlobal = NULL;
+	CHECKHR(CComObject<CQSGlobal>::CreateInstance(&pQSGlobal));
+	pQSGlobal->m_spIActiveScript = m_spIActiveScript;
+	CHECKHR(pQSGlobal->QueryInterface(IID_IQSGlobal, (void**) &m_spIQSGlobal));
+	CHECKHR(SetItem(CComBSTR(L"Global"), SCRIPTITEM_ISVISIBLE | SCRIPTITEM_GLOBALMEMBERS, m_spIQSGlobal));
+
 	return S_OK;
 }
 //----------------------------------------------------------------------
@@ -53,6 +98,10 @@ STDMETHODIMP CQSScriptSite::put_ScriptEngine(BSTR bstrScriptEngine)
 STDMETHODIMP CQSScriptSite::Close()
 {
 	HRESULT hr = S_OK;
+	if (m_spIQSGlobal)
+	{
+		m_spIQSGlobal = NULL;
+	}
 	if (m_spIActiveScript)
 	{
 		//hr = m_spIActiveScript->SetScriptState(SCRIPTSTATE_INITIALIZED);
@@ -63,6 +112,7 @@ STDMETHODIMP CQSScriptSite::Close()
 	m_spIActiveScriptParse = NULL;
 	if (m_pScriptSite)
 	{
+		m_pScriptSite->Close();
 		m_pScriptSite->Release();
 		m_pScriptSite = NULL;
 	}
@@ -130,6 +180,20 @@ STDMETHODIMP CQSScriptSite::ParseScriptText(BSTR bstrScript, VARIANT varContext,
 		CHECKHR(result.Detach(pvarResult));
 	}
 	return hr;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSScriptSite::SetItem(BSTR bstrName, LONG nFlags, IDispatch* pIDispatch)
+{
+	HRESULT hr = S_OK;
+	if (!m_pScriptSite) return E_POINTER;
+	if (!m_spIActiveScript) return E_POINTER;
+	CHECKHR(m_pScriptSite->SetItemInfo(bstrName, pIDispatch));
+	CHECKHR(m_spIActiveScript->AddNamedItem(bstrName, (DWORD) nFlags));
+	return S_OK;
 }
 
 //----------------------------------------------------------------------

@@ -75,6 +75,48 @@ public:
 
 };
 
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CScriptSite::Close()
+{
+	m_ItemInfo.RemoveAll();
+	return S_OK;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CScriptSite::GetItemInfo(LPCOLESTR pstrName, DWORD dwReturnMask, IUnknown **ppiunkItem, ITypeInfo **ppti)
+{
+	CComPtr<IUnknown> spIUnknown;
+	if (m_ItemInfo.Lookup(pstrName, spIUnknown))
+	{
+		if ((dwReturnMask & SCRIPTINFO_IUNKNOWN))
+		{
+			*ppiunkItem = spIUnknown.Detach();
+		}
+		return S_OK;
+	}
+	return TYPE_E_ELEMENTNOTFOUND;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CScriptSite::SetItemInfo(LPCOLESTR szName, IUnknown* piunkItem)
+{
+	m_ItemInfo.SetAt(szName, piunkItem);
+	return S_OK;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
 STDMETHODIMP CScriptSite::OnScriptError(IActiveScriptError *pIActiveScriptError)
 {
 	HRESULT hr = S_OK;

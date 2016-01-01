@@ -70,14 +70,18 @@ public:
 	CComPtr<IActiveScript> m_spIActiveScript;
 	CComPtr<IActiveScriptParse> m_spIActiveScriptParse;
 	CComPtr<IQSScriptSite> m_spImport;
+	CComPtr<IQSGlobal> m_spIQSGlobal;
 	STDMETHOD(ParseScriptText)(BSTR bstrScript, VARIANT varContext, DWORD dwFlags, VARIANT* pvarResult);
 
 public:
 	STDMETHOD(put_ScriptEngine)(BSTR bstrScriptEngine);
+	STDMETHOD(get_hWnd)(OLE_HANDLE* phWnd);
+	STDMETHOD(put_hWnd)(OLE_HANDLE hWnd);
 	STDMETHOD(Close)();
 	STDMETHOD(Evaluate)(BSTR bstrScript, VARIANT varContext, VARIANT* pvarResult);
 	STDMETHOD(Execute)(BSTR bstrScript, VARIANT varContext);
 	STDMETHOD(InvokeMethod)(BSTR bstrName, VARIANT varArg1, VARIANT varArg2, VARIANT varArg3, VARIANT* pvarResult);
+	STDMETHOD(SetItem)(BSTR bstrName, LONG nFlags, IDispatch* pIDispatch);
 
 };
 

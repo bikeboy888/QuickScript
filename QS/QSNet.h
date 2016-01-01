@@ -110,8 +110,9 @@ protected:
 	void InternetStatusCallback(HINTERNET, DWORD, LPVOID, DWORD);
 
 public:
-	STDMETHOD(get_OnReadyStateChange)(IDispatch** ppIDispatch);
-	STDMETHOD(putref_OnReadyStateChange)(IDispatch* pIDispatch);
+	STDMETHOD(get_OnReadyStateChange)(VARIANT* pvarDispatch);
+	STDMETHOD(putref_OnReadyStateChange)(VARIANT varDispatch);
+	STDMETHOD(put_OnReadyStateChange)(VARIANT varDispatch);
 	STDMETHOD(get_OpenTimeout)(LONG* pnOpenTimeout);
 	STDMETHOD(put_OpenTimeout)(LONG nOpenTimeout);
 	STDMETHOD(get_ReadyState)(LONG* pnReadyState);

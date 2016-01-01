@@ -3,6 +3,7 @@
 
 enum
 {
+	PROPID_hWnd,
 	PROPID_OpenTimeout,
 	PROPID_OnReadyStateChange,
 	PROPID_ReadyState,
@@ -17,11 +18,13 @@ enum
 	METHID_Evaluate,
 	METHID_Execute,
 	METHID_GetObjKey,
+	METHID_GetRef,
 	METHID_InvokeMethod,
 	METHID_Open,
 	METHID_Parse,
 	METHID_ReadAll,
 	METHID_Send,
+	METHID_SetItem,
 	METHID_SetObjKey,
 	METHID_Stringify
 
@@ -46,6 +49,7 @@ library QSLib
 	//interface IAxWinAmbientDispatchEx;
 	interface IQSApplication;
 	interface IQSFile;
+	interface IQSGlobal;
 	interface IQSNet;
 	interface IQSScriptSite;
 
@@ -85,6 +89,22 @@ library QSLib
 	};
 
 	//----------------------------------------------------------------------
+	// interface IQSGlobal
+	//----------------------------------------------------------------------
+
+	[
+		object,
+		uuid(6BF2DDE4-2A54-4105-A310-A73EB0F5A0F7),
+		dual,
+		nonextensible,
+		helpstring("IQSGlobal Interface"),
+		pointer_default(unique)
+	]
+	interface IQSGlobal : IDispatch{
+		[id(METHID_GetRef)] HRESULT GetRef([in] BSTR Name, [out, retval] IDispatch** Ref);
+	};
+
+	//----------------------------------------------------------------------
 	// interface IQSJScript
 	//----------------------------------------------------------------------
 
@@ -118,8 +138,9 @@ library QSLib
 		pointer_default(unique)
 	]
 	interface IQSNet : IDispatch{
-		[id(PROPID_OnReadyStateChange), propget] HRESULT OnReadyStateChange([out, retval] IDispatch** OnReadyStateChange);
-		[id(PROPID_OnReadyStateChange), propputref] HRESULT OnReadyStateChange([in] IDispatch* OnReadyStateChange);
+		[id(PROPID_OnReadyStateChange), propget] HRESULT OnReadyStateChange([out, retval] VARIANT* OnReadyStateChange);
+		[id(PROPID_OnReadyStateChange), propputref] HRESULT OnReadyStateChange([in] VARIANT OnReadyStateChange);
+		//[id(PROPID_OnReadyStateChange), propput] HRESULT OnReadyStateChange([in] IDispatch* OnReadyStateChange);
 		[id(PROPID_OpenTimeout), propget] HRESULT OpenTimeout([out, retval] LONG* OpenTimeout);
 		[id(PROPID_OpenTimeout), propput] HRESULT OpenTimeout([in] LONG OpenTimeout);
 		[id(PROPID_ReadyState), propget] HRESULT ReadyState([out, retval] LONG* ReadyState);
@@ -145,11 +166,14 @@ library QSLib
 		pointer_default(unique)
 	]
 	interface IQSScriptSite : IDispatch{
+		[id(PROPID_hWnd), propget] HRESULT hWnd([out, retval] OLE_HANDLE* hWnd);
+		[id(PROPID_hWnd), propput] HRESULT hWnd([in] OLE_HANDLE hWnd);
 		[id(PROPID_ScriptEngine), propput] HRESULT ScriptEngine(BSTR ScriptEngine);
 		[id(METHID_Close)] HRESULT Close();
 		[id(METHID_Evaluate)] HRESULT Evaluate([in] BSTR Script, [in, optional] VARIANT Context, [out, retval] VARIANT* Result);
 		[id(METHID_Execute)] HRESULT Execute([in] BSTR Script, [in, optional] VARIANT Context);
 		[id(METHID_InvokeMethod)] HRESULT InvokeMethod([in] BSTR Name, [in, optional] VARIANT Arg1, [in, optional] VARIANT Arg2, [in, optional] VARIANT Arg3, [out, retval] VARIANT* Result);
+		[id(METHID_SetItem)] HRESULT SetItem([in] BSTR Name, [in] LONG Flags, [in] IDispatch* Item);
 
 	};
 
@@ -177,6 +201,19 @@ library QSLib
 	coclass QSFile
 	{
 		[default] interface IQSFile;
+	};
+
+	//----------------------------------------------------------------------
+	// coclass QSGlobal
+	//----------------------------------------------------------------------
+
+	[
+		uuid(6CC22533-0628-4EAF-8993-3F4E12A039C1),
+		helpstring("QSGlobal Class")
+	]
+	coclass QSGlobal
+	{
+		[default] interface IQSGlobal;
 	};
 
 	//----------------------------------------------------------------------

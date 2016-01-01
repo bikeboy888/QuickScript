@@ -9,6 +9,7 @@
 #include "..\QSUtil\OutputDebugMemoryStatus.h"
 #include "..\QSUtil\OutputDebugVariant.h"
 #include "..\QSUtil\OutputDebugFormat.h"
+#include "..\QSUtil\InvokeMethod.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -32,6 +33,7 @@ BEGIN_MESSAGE_MAP(CQuickScriptDlg, CDialog)
 	//}}AFX_MSG_MAP
 	ON_BN_CLICKED(BTN_RUN, &CQuickScriptDlg::OnBnClickedRun)
 	ON_BN_CLICKED(BTN_CLEANUP, &CQuickScriptDlg::OnBnClickedCleanup)
+	ON_MESSAGE(WM_USER, &CQuickScriptDlg::OnScriptInvoke)
 END_MESSAGE_MAP()
 
 
@@ -50,11 +52,19 @@ BOOL CQuickScriptDlg::OnInitDialog()
 	if (edtScript)
 	{
 		edtScript->SetWindowText(
-			L"Function f(x)\r\n"
-			L"  Dim net\r\n"
+			L"Dim net, a\r\n"
+			L"\r\n"
+			L"Function rsc\r\n"
+			L"  a = 5\r\n"
+			L"  MsgBox net.ReadyState\r\n"
+			L"End Function\r\n"
+			L"\r\n"
 			L"  Set net = CreateObject(\"QS.Net\")\r\n"
-			L"  net.Open \"GET\", \"http://www.arcgis.com/sharing/rest?f=json\", False\r\n"
+			L"  Set net.OnReadyStateChange = GetRef(\"rsc\")\r\n"
+			L"  net.Open \"GET\", \"http://www.arcgis.com/sharing/rest?f=json\", True\r\n"
 			L"  net.Send\r\n"
+			L"\r\n"
+			L"Function f(x)\r\n"
 			L"  f = x + 2\r\n"
 			L"End Function\r\n"
 			);
@@ -147,12 +157,22 @@ void CQuickScriptDlg::OnBnClickedRun()
 	CComVariant pi;
 	hr = m_spIQSApplication->get_UserProperties(CComBSTR(L"pi"), &pi);
 
+	if (!m_spIXMLDOMDocument)
+	{
+		hr = m_spIXMLDOMDocument.CoCreateInstance(OLESTR("Microsoft.XMLDOM"));
+		VARIANT_BOOL bSuccessful = VARIANT_FALSE;
+		hr = m_spIXMLDOMDocument->loadXML(CComBSTR(L"<HELLO><WORLD/></HELLO>"), &bSuccessful);
+	}
+
 	if (!m_spIQSScriptSite)
 	{
 		//hr = E_FAIL;
 		hr = m_spIQSScriptSite.CoCreateInstance(CLSID_QSScriptSite);
 		hr = m_spIQSScriptSite->put_ScriptEngine(CComBSTR(L"VBScript"));
+		hr = m_spIQSScriptSite->SetItem(CComBSTR("Prefs"), SCRIPTITEM_ISVISIBLE, m_spIXMLDOMDocument);
 	}
+
+	hr = m_spIQSScriptSite->put_hWnd((OLE_HANDLE) m_hWnd);
 
 	//CComBSTR bstrURL(L"http://www.arcgis.com/sharing/rest?f=pjson");
 	//CComBSTR bstrURL(L"http://tviview.abc.net.au/iview/api2/?keyword=a-l");
@@ -225,6 +245,11 @@ void CQuickScriptDlg::OnBnClickedCleanup()
 		m_spIQSNet = NULL;
 	}
 
+	if (m_spIXMLDOMDocument)
+	{
+		m_spIXMLDOMDocument = NULL;
+	}
+
 	if (m_spIQSScriptSite)
 	{
 		hr = m_spIQSScriptSite->Close();
@@ -237,3 +262,12 @@ void CQuickScriptDlg::OnBnClickedCleanup()
 	OutputDebugMemoryStatus();
 	OutputDebugString(L"\r\n");
 }
+
+LRESULT CQuickScriptDlg::OnScriptInvoke(WPARAM wParam, LPARAM lParam)
+{
+	IDispatch* pIDispatch = (IDispatch*) lParam;
+	CComVariant varResult;
+	HRESULT hr = InvokeMethod(pIDispatch, NULL, CComVariant(), CComVariant(), CComVariant(), &varResult);
+	return 0;
+}
+

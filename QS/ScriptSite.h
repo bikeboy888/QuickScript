@@ -16,7 +16,7 @@ public:
     // IActiveScriptSite
 
     STDMETHOD(GetLCID)(LCID *plcid){ *plcid = 0; return S_OK; }
-    STDMETHOD(GetItemInfo)(LPCOLESTR pstrName, DWORD dwReturnMask, IUnknown **ppiunkItem, ITypeInfo **ppti) { return TYPE_E_ELEMENTNOTFOUND; }
+    STDMETHOD(GetItemInfo)(LPCOLESTR pstrName, DWORD dwReturnMask, IUnknown **ppiunkItem, ITypeInfo **ppti);
     STDMETHOD(GetDocVersionString)(BSTR *pbstrVersion) { *pbstrVersion = SysAllocString(L"1.0"); return S_OK; }
     STDMETHOD(OnScriptTerminate)(const VARIANT *pvarResult, const EXCEPINFO *pexcepinfo) { return S_OK; }
     STDMETHOD(OnStateChange)(SCRIPTSTATE ssScriptState) { return S_OK; }
@@ -31,7 +31,12 @@ public:
 
     // Miscellaneous
 
-    HRESULT SetWindow(HWND hWnd) { m_hWnd = hWnd; return S_OK; }
+	STDMETHOD(Close)();
+    STDMETHOD(SetWindow)(HWND hWnd) { m_hWnd = hWnd; return S_OK; }
+	STDMETHOD(SetItemInfo)(LPCOLESTR szName, IUnknown* piunkItem);
+
+protected:
+	CAtlMap<CComBSTR, CComPtr<IUnknown>, CElementTraits<CComBSTR>> m_ItemInfo;
 
 public:
     LONG m_cRefCount;

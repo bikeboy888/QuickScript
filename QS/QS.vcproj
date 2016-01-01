@@ -425,6 +425,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\DispatchHack.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\QS.cpp"
 				>
 			</File>
@@ -514,6 +518,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\DispatchHack.h"
+				>
+			</File>
 			<File
 				RelativePath=".\resourceppc.h"
 				>
@@ -618,6 +626,18 @@
 				>
 			</File>
 			<File
+				RelativePath=".\QSGlobal.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\QSGlobal.h"
+				>
+			</File>
+			<File
+				RelativePath=".\QSGlobal.rgs"
+				>
+			</File>
+			<File
 				RelativePath=".\QSJScript.cpp"
 				>
 			</File>
@@ -654,6 +674,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\ReadMe.md"
+			>
+		</File>
 		<File
 			RelativePath=".\ReadMe.txt"
 			>

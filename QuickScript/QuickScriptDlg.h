@@ -25,6 +25,7 @@ protected:
 	CComPtr<IQSApplication> m_spIQSApplication;
 	CComPtr<IQSScriptSite> m_spIQSScriptSite;
 	CComPtr<IQSNet> m_spIQSNet;
+	CComPtr<IXMLDOMDocument> m_spIXMLDOMDocument;
 
 	// Generated message map functions
 	virtual BOOL OnInitDialog();
@@ -34,4 +35,5 @@ protected:
 public:
 	afx_msg void OnBnClickedRun();
 	afx_msg void OnBnClickedCleanup();
+	afx_msg LRESULT OnScriptInvoke(WPARAM wParam, LPARAM lParam);
 };

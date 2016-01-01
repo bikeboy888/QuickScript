@@ -52,13 +52,20 @@ CQSNet::CQSNet() :
 //
 //----------------------------------------------------------------------
 
-STDMETHODIMP CQSNet::get_OnReadyStateChange(IDispatch** ppIDispatch)
+STDMETHODIMP CQSNet::get_OnReadyStateChange(VARIANT* pvarDispatch)
 {
 	HRESULT hr = S_OK;
+	VariantInit(pvarDispatch);
+	if (!m_OnReadyStateChange) return S_OK;
+	CComPtr<IDispatch> spIDispatch = m_OnReadyStateChange;
+	pvarDispatch->vt = VT_DISPATCH;
+	V_DISPATCH(pvarDispatch) = spIDispatch.Detach();
+	/*
 	if (!ppIDispatch) return E_INVALIDARG;
 	*ppIDispatch = NULL;
 	if (!m_OnReadyStateChange) return S_OK;
 	CHECKHR(m_OnReadyStateChange->QueryInterface(IID_IDispatch, (void**) ppIDispatch));
+	*/
 	return hr;
 }
 
@@ -66,9 +73,30 @@ STDMETHODIMP CQSNet::get_OnReadyStateChange(IDispatch** ppIDispatch)
 //
 //----------------------------------------------------------------------
 
-STDMETHODIMP CQSNet::putref_OnReadyStateChange(IDispatch* pIDispatch)
+STDMETHODIMP CQSNet::put_OnReadyStateChange(VARIANT pvarDispatch)
 {
-	m_OnReadyStateChange = pIDispatch;
+	//m_OnReadyStateChange = pIDispatch;
+	return S_OK;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSNet::putref_OnReadyStateChange(VARIANT varDispatch)
+{
+	HRESULT hr = S_OK;
+	VARIANT* pvarDispatch = &varDispatch;
+	switch (pvarDispatch->vt)
+	{
+	case VT_DISPATCH:
+		m_OnReadyStateChange = NULL;
+		CHECKHR(V_DISPATCH(pvarDispatch)->QueryInterface(IID_IDispatch, (void**) &m_OnReadyStateChange));
+		return hr;
+	default:
+		return E_NOTIMPL;
+	}
+
 	return S_OK;
 }
 
@@ -536,6 +564,10 @@ STDMETHODIMP CQSNet::DoInternetReadFile()
 					m_ResponseFile = NULL;
 				}
 				CHECKHR(put_ReadyState(4));
+				if (m_bAsync == VARIANT_TRUE)
+				{
+					//Release();
+				}
 				return S_OK;
 			}
 
@@ -602,8 +634,29 @@ STDMETHODIMP CQSNet::OnReadyStateChange()
 {
 	HRESULT hr = S_OK;
 	if (!m_OnReadyStateChange) return S_OK;
-	CComVariant varResult;
-	CHECKHR(InvokeMethod(m_OnReadyStateChange, NULL, CComVariant(), CComVariant(), CComVariant(), &varResult));
+	if (m_bAsync == VARIANT_TRUE)
+	{
+		CComPtr<IPropertyBag> spIPropertyBag;
+		hr = m_OnReadyStateChange->QueryInterface(IID_IPropertyBag, (void**) &spIPropertyBag);
+		if (SUCCEEDED(hr) && spIPropertyBag)
+		{
+			CComVariant varhWnd;
+			hr = spIPropertyBag->Read(OLESTR("hWnd"), &varhWnd, NULL);
+			if (SUCCEEDED(hr) && varhWnd.vt == VT_I4)
+			{
+				HWND hWnd = (HWND) V_I4(&varhWnd);
+				if (hWnd != NULL)
+				{
+					PostMessage(hWnd, WM_USER, 0, (LPARAM) (IDispatch*) m_OnReadyStateChange);
+				}
+			}
+		}
+	}
+	else
+	{
+		CComVariant varResult;
+		CHECKHR(InvokeMethod(m_OnReadyStateChange, NULL, CComVariant(), CComVariant(), CComVariant(), &varResult));
+	}
 	return hr;
 }
 
@@ -645,6 +698,7 @@ STDMETHODIMP CQSNet::Open(BSTR bstrMethod, BSTR bstrURL, VARIANT varAsync)
 		CHECKHR(DoInternetOpen());
 		CHECKHR(DoInternetConnect());
 		DWORD dwTick = GetTickCount();
+		//AddRef();
 		DWORD dwWait = WaitForSingleObject(m_hOpenEvent, m_nOpenTimeout >= 0 ? (DWORD) m_nOpenTimeout : INFINITE);
 		if (dwWait != WAIT_OBJECT_0)
 		{
@@ -661,6 +715,7 @@ STDMETHODIMP CQSNet::Open(BSTR bstrMethod, BSTR bstrURL, VARIANT varAsync)
 			dwLastError = GetLastError();
 			OutputDebugFormat(L"CloseHandle(m_hOpenEvent) = FALSE (GetLastError:%d)\r\n", dwLastError);
 #endif
+			//Release();
 		}
 		else
 		{

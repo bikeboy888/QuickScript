@@ -69,3 +69,5 @@
 #endif
 
 #include <altcecrt.h>
+#include <msxml2.h>
+#include <activscp.h>
