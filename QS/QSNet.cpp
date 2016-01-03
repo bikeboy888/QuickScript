@@ -521,6 +521,12 @@ STDMETHODIMP CQSNet::DoSend(VARIANT& varData)
 
 	case VT_BSTR:
 		return DoSend(V_BSTR(pvarData));
+
+	case VT_DISPATCH:
+		return DoSend((IUnknown*) V_DISPATCH(pvarData));
+
+	case VT_UNKNOWN:
+		return DoSend(V_UNKNOWN(pvarData));
 	}
 
 	OutputDebugFormat(L"Error: DoHttpSendRequest (vt=%d) not implemented\r\n", pvarData->vt);
@@ -553,6 +559,101 @@ STDMETHODIMP CQSNet::DoSend(BSTR bstrData)
 	ZeroMemory((BYTE*) spDataA, nLenA);
 	WideCharToMultiByte(CP_UTF8, 0, bstrData, nLenW + 1, (LPSTR) (BYTE*) spDataA, nLenA, NULL, NULL);
 	return DoHttpSendRequest((BYTE*) spDataA, nLenA - 1);
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSNet::DoSend(IUnknown* pIUnknown)
+{
+	HRESULT hr = S_OK;
+
+	if (!pIUnknown)
+	{
+		return DoHttpSendRequest(0, 0);
+	}
+
+	CComPtr<IStream> spIStream;
+	hr = pIUnknown->QueryInterface(IID_IStream, (void**) &spIStream);
+	if (SUCCEEDED(hr) && spIStream)
+	{
+		DoSend((IStream*) spIStream);
+	}
+
+	return E_NOTIMPL;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSNet::DoSend(IStream* pIStream)
+{
+	HRESULT hr = S_OK;
+	BOOL bOk = TRUE;
+	DWORD dwLastError = ERROR_SUCCESS;
+
+	STATSTG stat = { };
+	CHECKHR(pIStream->Stat(&stat, STATFLAG_NONAME));
+	if (stat.cbSize.QuadPart == 0)
+	{
+		return DoHttpSendRequest(0, 0);
+	}
+
+	INTERNET_BUFFERS BufferIn = { };
+	BufferIn.dwStructSize = sizeof( INTERNET_BUFFERS ); // Must be set or error will occur
+    BufferIn.Next = NULL; 
+    BufferIn.lpcszHeader = NULL;
+    BufferIn.dwHeadersLength = 0;
+    BufferIn.dwHeadersTotal = 0;
+    BufferIn.lpvBuffer = NULL;                
+    BufferIn.dwBufferLength = 0;
+    BufferIn.dwBufferTotal = (DWORD) stat.cbSize.QuadPart;
+    BufferIn.dwOffsetLow = 0;
+    BufferIn.dwOffsetHigh = 0;
+
+	bOk = HttpSendRequestEx(m_hRequest, &BufferIn, NULL, 0, 0);
+	if (bOk != TRUE)
+	{
+		dwLastError = GetLastError();
+#ifdef _DEBUG
+		OutputDebugFormat(L"HttpSendRequestEx -> FALSE (GetLastError: %d)\r\n", dwLastError);
+#endif
+		hr = HRESULT_FROM_WIN32(dwLastError);
+		return hr;
+	}
+
+	BYTE Buffer[1024] = { };
+	DWORD cbRead = 0;
+	hr = pIStream->Read(Buffer, 1024, &cbRead);
+	while (SUCCEEDED(hr) && cbRead > 0)
+	{
+		DWORD dwWritten = 0;
+		bOk = InternetWriteFile(m_hRequest, Buffer, cbRead, &dwWritten);
+		if (bOk != TRUE)
+		{
+			dwLastError = GetLastError();
+	#ifdef _DEBUG
+			OutputDebugFormat(L"HttpSendRequestEx -> FALSE (GetLastError: %d)\r\n", dwLastError);
+	#endif
+			hr = HRESULT_FROM_WIN32(dwLastError);
+			return hr;
+		}
+	}
+
+	bOk = HttpEndRequest(m_hRequest, NULL, 0, 0);
+	if (bOk != TRUE)
+	{
+		dwLastError = GetLastError();
+#ifdef _DEBUG
+		OutputDebugFormat(L"HttpSendRequestEx -> FALSE (GetLastError: %d)\r\n", dwLastError);
+#endif
+		hr = HRESULT_FROM_WIN32(dwLastError);
+		return hr;
+	}
+
+	return S_OK;
 }
 
 //----------------------------------------------------------------------

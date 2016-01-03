@@ -102,6 +102,8 @@ protected:
 	STDMETHOD(DoHttpOpenRequest)();
 	STDMETHOD(DoSend)(VARIANT& varData);
 	STDMETHOD(DoSend)(BSTR bstrData);
+	STDMETHOD(DoSend)(IUnknown* pIUnknown);
+	STDMETHOD(DoSend)(IStream* pIStream);
 	STDMETHOD(DoHttpSendRequest)(LPBYTE pData = NULL, int nData = 0);
 	STDMETHOD(DoInternetReadFile)();
 	STDMETHOD(OnContentDownload)(BYTE* pContent, LONG nContent);
