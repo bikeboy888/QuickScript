@@ -4,6 +4,7 @@
 #include "QSNet.h"
 #include "QSFile.h"
 #include "..\QSUtil\OutputDebugFormat.h"
+#include "..\QSUtil\OutputDebugRequest.h"
 #include "..\QSUtil\VariantToBOOL.h"
 #include "..\QSUtil\InvokeMethod.h"
 
@@ -505,17 +506,70 @@ STDMETHODIMP CQSNet::DoHttpOpenRequest()
 //
 //----------------------------------------------------------------------
 
-STDMETHODIMP CQSNet::DoHttpSendRequest()
+STDMETHODIMP CQSNet::DoSend(VARIANT& varData)
+{
+	VARIANT* pvarData = &varData;
+	if (pvarData->vt == (VT_VARIANT | VT_BYREF))
+	{
+		pvarData = pvarData->pvarVal;
+	}
+	switch (pvarData->vt)
+	{
+	case VT_EMPTY:
+	case VT_NULL:
+		return DoHttpSendRequest(0, 0);
+
+	case VT_BSTR:
+		return DoSend(V_BSTR(pvarData));
+	}
+
+	OutputDebugFormat(L"Error: DoHttpSendRequest (vt=%d) not implemented\r\n", pvarData->vt);
+	return E_NOTIMPL;
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSNet::DoSend(BSTR bstrData)
+{
+	int nLenW = SysStringLen(bstrData);
+	if (nLenW == 0)
+	{
+		return DoHttpSendRequest(0, 0);
+	}
+
+	int nLenA = WideCharToMultiByte(CP_UTF8, 0, bstrData, nLenW + 1, NULL, 0, NULL, NULL);
+	if (nLenA <= 1)
+	{
+		return DoHttpSendRequest(0, 0);
+	}
+
+	CComHeapPtr<BYTE> spDataA;
+	if (!spDataA.AllocateBytes(nLenA))
+	{
+		return E_OUTOFMEMORY;
+	}
+	ZeroMemory((BYTE*) spDataA, nLenA);
+	WideCharToMultiByte(CP_UTF8, 0, bstrData, nLenW + 1, (LPSTR) (BYTE*) spDataA, nLenA, NULL, NULL);
+	return DoHttpSendRequest((BYTE*) spDataA, nLenA - 1);
+}
+
+//----------------------------------------------------------------------
+//
+//----------------------------------------------------------------------
+
+STDMETHODIMP CQSNet::DoHttpSendRequest(LPBYTE pData, int nData)
 {
 	HRESULT hr = S_OK;
 	DWORD dwLastError = ERROR_SUCCESS;
 	BOOL bOk = TRUE;
 
-	LPBYTE pData = NULL;
-	int nData = 0;
+	WCHAR szHeaders[] = L"Content-Type: application/x-www-form-urlencoded\n";
+	int nHeaders = wcslen(szHeaders);
 
 	m_state = stateHttpSendRequest;
-	bOk = HttpSendRequest(m_hRequest, NULL, 0, pData, nData);
+	bOk = HttpSendRequest(m_hRequest, szHeaders, nHeaders, pData, nData);
 	CHECKHR(put_ReadyState(2));
 	if (bOk != TRUE)
 	{
@@ -741,7 +795,7 @@ STDMETHODIMP CQSNet::Open(BSTR bstrMethod, BSTR bstrURL, VARIANT varAsync)
 STDMETHODIMP CQSNet::Send(VARIANT varBody)
 {
 	HRESULT hr = S_OK;
-	CHECKHR(DoHttpSendRequest());
+	CHECKHR(DoSend(varBody));
 	if (m_bAsync != VARIANT_TRUE)
 	{
 		CHECKHR(put_ReadyState(3));
@@ -805,6 +859,7 @@ void CQSNet::InternetStatusCallback(
 		case stateHttpSendRequest:
 			//OnHttpSendRequestComplete(lpvStatusInformation);
 			put_ReadyState(3);
+			OutputDebugRequest(m_hRequest);
 			DoInternetReadFile();
 			break;
 

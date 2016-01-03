@@ -349,6 +349,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\OutputDebugRequest.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\OutputDebugVariant.cpp"
 				>
 			</File>
@@ -416,6 +420,10 @@
 			</File>
 			<File
 				RelativePath=".\OutputDebugMemoryStatus.h"
+				>
+			</File>
+			<File
+				RelativePath=".\OutputDebugRequest.h"
 				>
 			</File>
 			<File

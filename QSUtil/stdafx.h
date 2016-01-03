@@ -55,6 +55,7 @@
 #include <altcecrt.h>
 #include <atlbase.h>
 #include <atlcom.h>
+#include <wininet.h>
 
 #ifndef CHECKHR
 #define CHECKHR(stmt) \
